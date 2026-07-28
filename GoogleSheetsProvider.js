@@ -30,17 +30,4 @@ class GoogleSheetsProvider {
         this.committer.commit(worksheetData);
 
     }
-
-    find(executionPlan) {
-
-        const worksheetData =
-            this.resourceManager.getWorksheetData(...);
-
-        return this.executionEngine.execute(
-            this.context,
-            worksheetData,
-            executionPlan
-        );
-
-    }
 }
