@@ -25,8 +25,12 @@ class SheetEngine {
 
         try {
 
+            const json = JSON.parse(e.postData.contents);
+
             const request =
-                JSON.parse(e.postData.contents);
+                RequestParser.parse(json);
+
+            RequestValidator.validate(request);
 
             const context =
                 new ExecutionContext(
@@ -35,18 +39,21 @@ class SheetEngine {
                 );
 
             context.provider =
-                new GoogleSheetsProvider(context.resources);
+                new GoogleSheetsProvider(
+                    context.resources
+                );
 
-            // context.finish();
+            const service =
+                new ExecutionService();
+
+            service.execute(context);
 
             context.response.executionTime =
                 context.statistics.execution.totalTime;
 
-            return ContentService
-                .createTextOutput(
-                    JSON.stringify(context.response)
-                )
-                .setMimeType(ContentService.MimeType.JSON);
+            return this.buildResponse(
+                context.response
+            );
 
         } catch (ex) {
 
@@ -60,6 +67,16 @@ class SheetEngine {
                 .setMimeType(ContentService.MimeType.JSON);
 
         }
+
+    }
+
+    buildResponse(response) {
+
+        return ContentService
+            .createTextOutput(
+                JSON.stringify(response)
+            )
+            .setMimeType(ContentService.MimeType.JSON);
 
     }
 

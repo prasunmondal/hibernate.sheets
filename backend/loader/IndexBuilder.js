@@ -18,7 +18,7 @@ class IndexBuilder {
             index.put(row);
         }
 
-        worksheetData.indexes.push(index);
+        worksheetData.getIndexes().push(index);
 
     }
 

@@ -4,7 +4,7 @@ class Registry {
 
         this.spreadsheets = {
 
-            MASTER: "",
+            MASTER: "1C8rsAWa0XfpxfHSb-F-FALSvmCT1knQ5lBoegQ8Phwc",
 
             HR: "",
 
