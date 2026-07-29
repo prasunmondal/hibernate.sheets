@@ -15,6 +15,8 @@ class ExecutionPlanBuilder {
 
         plan.setOffset(operation.offset);
 
+        // console.log("Execution Plan: " + JSON.stringify(plan));
+        context.getDebug().add("Execution Plan", plan);
         return plan;
 
     }

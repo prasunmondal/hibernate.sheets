@@ -110,6 +110,8 @@ class WorksheetLoader {
             loaderStats.rowsRead =
                 worksheetData.getRows().length;
 
+            context.getDebug().add("Rows Loaded", worksheetData.getRows().length);
+
             loaderStats.columnsRead =
                 worksheetData.getSchema()
                     .getColumns()

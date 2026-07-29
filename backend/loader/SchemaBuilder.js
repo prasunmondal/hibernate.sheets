@@ -11,5 +11,8 @@ class SchemaBuilder {
 
             schema.addColumn(column);
         }
+
+        context.getDebug().add("Schema", JSON.stringify(schema));
+        context.getDebug().add("Headers", headers);
     }
 }

@@ -15,5 +15,10 @@ class ExecutionContext {
         this.statistics =
             new Statistics();
 
+        this.debug = new DebugContext();
+    }
+
+    getDebug() {
+        return this.debug;
     }
 }
