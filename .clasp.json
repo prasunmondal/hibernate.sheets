@@ -11,6 +11,21 @@
   "jsonExtensions": [
     ".json"
   ],
-  "filePushOrder": [],
+  "filePushOrder": [
+    "backend/src/query/Predicate.js",
+    "backend/src/query/EqualsPredicate.js",
+    "backend/src/query/Predicates.js",
+
+    "backend/src/query/CompiledPredicate.js",
+    "backend/src/query/CompiledEqualsPredicate.js",
+
+    "backend/src/query/CompiledPlan.js",
+    "backend/src/query/ExecutionPlan.js",
+    "backend/src/query/ExecutionResult.js",
+
+    "backend/src/query/ExecutionCompiler.js",
+    "backend/src/query/ExecutionExecutor.js",
+    "backend/src/query/ExecutionEngine.js"
+  ],
   "skipSubdirectories": false
 }
