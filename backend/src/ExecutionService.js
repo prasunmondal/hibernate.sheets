@@ -52,6 +52,13 @@ class ExecutionService {
                 worksheetData
             );
 
+        //////////////// Debug
+        context.response.debug = {
+            rowsLoaded: worksheetData.getRows().length,
+            schema: worksheetData.getSchema(),
+            predicates: plan.getPredicates().length
+        };
+
         context.response.addResult(
             apiResult
         );
