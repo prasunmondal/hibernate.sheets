@@ -11,9 +11,7 @@ class WorksheetDataReference {
     }
 
     isLoaded() {
-
-        return this.data != null;
-
+        return this.data !== null;
     }
 
 }

@@ -29,20 +29,18 @@ class SheetEngine {
                 JSON.parse(e.postData.contents);
 
             const context =
-                new ExecutionContext(request);
-
-            context.registry = this.registry;
+                new ExecutionContext(
+                    request,
+                    this.registry
+                );
 
             context.provider =
-                new GoogleSheetsProvider(this.registry);
+                new GoogleSheetsProvider(context.resources);
 
-            context.response =
-                new ApiResponse(request.requestId);
-
-            context.finish();
+            // context.finish();
 
             context.response.executionTime =
-                context.statistics.executionTime;
+                context.statistics.execution.totalTime;
 
             return ContentService
                 .createTextOutput(

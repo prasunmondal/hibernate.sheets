@@ -1,17 +1,23 @@
 class EqualsPredicate extends Predicate {
 
-    constructor(columnIndex, expectedValue) {
+    constructor(columnName, expectedValue) {
 
         super();
 
-        this.columnIndex = columnIndex;
+        this.columnName = columnName;
         this.expectedValue = expectedValue;
 
     }
 
-    matches(row) {
+    getColumnName() {
 
-        return row.values[this.columnIndex] === this.expectedValue;
+        return this.columnName;
+
+    }
+
+    getExpectedValue() {
+
+        return this.expectedValue;
 
     }
 

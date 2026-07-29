@@ -12,18 +12,22 @@ class ValueReader {
                 reference.worksheet
             );
 
-        if (worksheet.getLastRow() === 0) {
-            return [];
+        let values = [];
+
+        if (worksheet.getLastRow() > 0) {
+
+            values = worksheet
+                .getRange(
+                    1,
+                    1,
+                    worksheet.getLastRow(),
+                    worksheet.getLastColumn()
+                )
+                .getValues();
+
         }
 
-        return worksheet
-            .getRange(
-                1,
-                1,
-                worksheet.getLastRow(),
-                worksheet.getLastColumn()
-            )
-            .getValues();
-    }
+        return new RawWorksheet(values);
 
+    }
 }

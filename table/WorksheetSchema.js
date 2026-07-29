@@ -4,7 +4,7 @@ class WorksheetSchema {
 
         this.columns = [];
 
-        this.columnLookup = {};
+        this.columnLookup = Object.create(null);
 
         this.primaryKeyIndex = -1;
 
@@ -24,15 +24,26 @@ class WorksheetSchema {
 
     }
 
-    indexOf(columnName) {
+    getColumnIndex(columnName) {
 
-        return this.columnLookup[columnName];
+        return this.hasColumn(columnName)
+            ? this.columnLookup[columnName]
+            : -1;
 
     }
 
     hasColumn(columnName) {
 
-        return this.columnLookup.hasOwnProperty(columnName);
+        return Object.prototype.hasOwnProperty.call(
+            this.columnLookup,
+            columnName
+        );
+
+    }
+
+    getColumns() {
+
+        return this.columns;
 
     }
 

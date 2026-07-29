@@ -1,18 +1,19 @@
 class ExecutionContext {
 
-    constructor(request) {
+    constructor(request, registry) {
 
         this.request = request;
 
-        this.registry = new Registry();
+        this.registry = registry;
 
         this.resources =
-            new ResourceManager(this.registry);
+            new ResourceManager(registry);
 
         this.response =
             new ApiResponse(request.requestId);
 
-        this.statistics = new Statistics();
-    }
+        this.statistics =
+            new Statistics();
 
+    }
 }

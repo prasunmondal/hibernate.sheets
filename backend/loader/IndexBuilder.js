@@ -3,7 +3,7 @@ class IndexBuilder {
     build(worksheetData) {
 
         const schema =
-            worksheetData.schema;
+            worksheetData.getSchema();
 
         if (schema.primaryKeyIndex < 0) {
             return;
@@ -14,7 +14,7 @@ class IndexBuilder {
                 schema.primaryKeyIndex
             );
 
-        for (const row of worksheetData.rows) {
+        for (const row of worksheetData.getRows()) {
             index.put(row);
         }
 

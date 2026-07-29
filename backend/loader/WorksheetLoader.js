@@ -41,26 +41,11 @@ class WorksheetLoader {
             });
 
             const rawWorksheet = read.result;
+
             loaderStats.readTime = read.elapsed;
 
             //
-            // Empty worksheet
-            //
-            if (rawWorksheet.isEmpty()) {
-
-                worksheetData.loaded = true;
-
-                reference.data = worksheetData;
-
-                loaderStats.rowsRead = 0;
-                loaderStats.columnsRead = rawWorksheet.getColumnCount();
-                loaderStats.cellsRead = 0;
-
-                return worksheetData;
-            }
-
-            //
-            // Build Schema
+            // Build Schema (always)
             //
             loaderStats.schemaTime =
                 Stopwatch.measure(() => {
@@ -71,6 +56,24 @@ class WorksheetLoader {
                     );
 
                 }).elapsed;
+
+            //
+            // No data rows
+            //
+            if (!rawWorksheet.hasDataRows()) {
+
+                worksheetData.loaded = true;
+
+                reference.data = worksheetData;
+
+                loaderStats.rowsRead = 0;
+                loaderStats.columnsRead =
+                    worksheetData.getSchema().getColumns().length;
+                loaderStats.cellsRead = 0;
+
+                return worksheetData;
+
+            }
 
             //
             // Build Rows
@@ -105,10 +108,12 @@ class WorksheetLoader {
             reference.data = worksheetData;
 
             loaderStats.rowsRead =
-                worksheetData.rows.length;
+                worksheetData.getRows().length;
 
             loaderStats.columnsRead =
-                worksheetData.schema.columns.length;
+                worksheetData.getSchema()
+                    .getColumns()
+                    .length;
 
             loaderStats.cellsRead =
                 loaderStats.rowsRead *

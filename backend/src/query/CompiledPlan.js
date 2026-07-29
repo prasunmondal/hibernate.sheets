@@ -18,4 +18,34 @@ class CompiledPlan {
 
     }
 
+    getPredicates() {
+
+        return this.predicates;
+
+    }
+
+    setLimit(limit) {
+
+        this.limit = limit;
+
+    }
+
+    getLimit() {
+
+        return this.limit;
+
+    }
+
+    setOffset(offset) {
+
+        this.offset = offset;
+
+    }
+
+    getOffset() {
+
+        return this.offset;
+
+    }
+
 }

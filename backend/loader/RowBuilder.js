@@ -8,8 +8,7 @@ class RowBuilder {
 
         let sheetRow = 2;
 
-        for (const values of rawWorksheet.rows) {
-
+        for (const values of rawWorksheet.getRows()) {
             const row = this.factory.create(
                 sheetRow,
                 values

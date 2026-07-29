@@ -28,4 +28,28 @@ class WorksheetData {
 
     }
 
+    getRows() {
+
+        return this.rows;
+
+    }
+
+    getSchema() {
+
+        return this.schema;
+
+    }
+
+    getIndexes() {
+
+        return this.indexes;
+
+    }
+
+    getChangeSet() {
+
+        return this.changeSet;
+
+    }
+
 }

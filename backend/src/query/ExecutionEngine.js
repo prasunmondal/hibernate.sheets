@@ -1,13 +1,12 @@
 class ExecutionEngine {
 
-    constructor(compiler,
-                executor) {
+    constructor(compiler, executor) {
 
         this.compiler =
-            compiler || new ExecutionCompiler();
+            compiler ?? new ExecutionCompiler();
 
         this.executor =
-            executor || new ExecutionExecutor();
+            executor ?? new ExecutionExecutor();
 
     }
 
@@ -18,36 +17,44 @@ class ExecutionEngine {
         const executionStats =
             context.statistics.execution;
 
-        const stopwatch = new Stopwatch();
+        //
+        // Compile
+        //
+        const compile =
+            Stopwatch.measure(() => {
 
-        stopwatch.start();
+                return this.compiler.compile(
+                    worksheetData,
+                    executionPlan
+                );
 
-        const compiledPlan =
-            this.compiler.compile(
-                worksheetData,
-                executionPlan
-            );
+            });
 
         executionStats.compileTime =
-            stopwatch.elapsed();
+            compile.elapsed;
 
-        stopwatch.restart();
+        //
+        // Execute
+        //
+        const execute =
+            Stopwatch.measure(() => {
 
-        const result =
-            this.executor.execute(
-                context,
-                worksheetData,
-                compiledPlan
-            );
+                return this.executor.execute(
+                    context,
+                    worksheetData,
+                    compile.result
+                );
+
+            });
 
         executionStats.executeTime =
-            stopwatch.elapsed();
+            execute.elapsed;
 
         executionStats.totalTime =
             executionStats.compileTime +
             executionStats.executeTime;
 
-        return result;
+        return execute.result;
 
     }
 

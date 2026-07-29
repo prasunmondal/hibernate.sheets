@@ -17,8 +17,12 @@ class RawWorksheet {
         return this.rows;
     }
 
-    isEmpty() {
-        return this.rows.length === 0;
+    isWorksheetEmpty() {
+        return this.headers.length === 0;
+    }
+
+    hasDataRows() {
+        return this.rows.length > 0;
     }
 
     getColumnCount() {

@@ -4,20 +4,30 @@ class GoogleSheetsProvider {
 
         this.resources = resources;
 
-        this.loader = new WorksheetLoader();
+        this.loader =
+            new WorksheetLoader(resources);
 
-        this.committer = new WorksheetCommitter();
+        this.committer =
+            new WorksheetCommitter();
 
     }
 
-    getWorksheetData(spreadsheet, worksheet) {
+    getWorksheetData(context,
+                     spreadsheet,
+                     worksheet) {
 
         const reference =
-            this.resources.data.get(spreadsheet, worksheet);
+            this.resources.data.get(
+                spreadsheet,
+                worksheet
+            );
 
         if (!reference.isLoaded()) {
 
-            this.loader.load(context, reference)
+            this.loader.load(
+                context,
+                reference
+            );
 
         }
 
@@ -27,7 +37,10 @@ class GoogleSheetsProvider {
 
     commit(worksheetData) {
 
-        this.committer.commit(worksheetData);
+        this.committer.commit(
+            worksheetData
+        );
 
     }
+
 }

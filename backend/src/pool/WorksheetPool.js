@@ -20,13 +20,18 @@ class WorksheetPool {
         const ss =
             this.pool.get(spreadsheetAlias);
 
-        const ws =
-            ss.getSheetByName(worksheet);
+        const ws = ss.getSheetByName(worksheet);
 
-        this.cache[key]=ws;
+        if (!ws) {
+            throw new Error(
+                "Worksheet not found: " +
+                worksheet
+            );
+        }
+
+        this.cache[key] = ws;
 
         return ws;
-
     }
 
 }

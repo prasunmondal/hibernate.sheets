@@ -4,7 +4,29 @@ class ExecutionResult {
 
         this.rows = [];
 
-        this.statistics = new QueryStatistics();
+    }
+
+    addRow(row) {
+
+        this.rows.push(row);
+
+    }
+
+    getRows() {
+
+        return this.rows;
+
+    }
+
+    getRowCount() {
+
+        return this.rows.length;
+
+    }
+
+    isEmpty() {
+
+        return this.rows.length === 0;
 
     }
 
