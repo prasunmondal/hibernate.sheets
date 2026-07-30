@@ -65,61 +65,6 @@ class ExecutionExecutor {
         return result;
     }
 
-    // matches(context, row, predicates) {
-    //
-    //     context.getDebug().add("matches()", {
-    //         predicatesIsNull: predicates == null,
-    //         predicatesType: typeof predicates,
-    //         isArray: Array.isArray(predicates),
-    //         constructor: predicates ? predicates.constructor.name : null,
-    //         rowIsNull: row == null,
-    //         rowValuesIsNull: row ? row.values == null : true
-    //     });
-    //
-    //     if (predicates == null) {
-    //         throw new Error("predicates == null");
-    //     }
-    //
-    //     if (!Array.isArray(predicates)) {
-    //         throw new Error(
-    //             "Predicates is not an array. Type=" +
-    //             typeof predicates +
-    //             ", constructor=" +
-    //             predicates.constructor.name
-    //         );
-    //     }
-    //
-    //     for (let i = 0; i < predicates.length; i++) {
-    //
-    //         const predicate = predicates[i];
-    //
-    //         context.getDebug().add("Before Predicate", {
-    //             index: i,
-    //             predicate: predicate
-    //         });
-    //
-    //         const actualValue = row.values[predicate.columnIndex];
-    //         const matched = predicate.matches(row);
-    //
-    //         context.getDebug().add(
-    //             "Predicate Evaluation",
-    //             {
-    //                 predicate: predicate.constructor.name,
-    //                 columnIndex: predicate.columnIndex,
-    //                 expectedValue: predicate.expectedValue,
-    //                 actualValue: actualValue,
-    //                 matched: matched
-    //             }
-    //         );
-    //
-    //         if (!matched) {
-    //             return false;
-    //         }
-    //     }
-    //
-    //     return true;
-    // }
-
     matches(context, row, predicates) {
 
         if (predicates == null) {
