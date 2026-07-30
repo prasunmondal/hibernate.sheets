@@ -51,6 +51,7 @@ class WorksheetLoader {
                 Stopwatch.measure(() => {
 
                     this.schemaBuilder.build(
+                        context,
                         worksheetData,
                         rawWorksheet
                     );

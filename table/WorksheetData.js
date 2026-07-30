@@ -28,6 +28,10 @@ class WorksheetData {
 
     }
 
+    getWorksheet() {
+        return this.worksheet
+    }
+
     getRows() {
 
         return this.rows;

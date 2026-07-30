@@ -1,6 +1,6 @@
 class ExecutionCompiler {
 
-    compile(worksheetData, executionPlan) {
+    compile(context, worksheetData, executionPlan) {
 
         const compiledPlan = new CompiledPlan();
 
@@ -13,6 +13,11 @@ class ExecutionCompiler {
         this.copyPaging(
             executionPlan,
             compiledPlan
+        );
+
+        context.getDebug().add(
+            "Compiled Predicates",
+            compiledPlan.getPredicates().length
         );
 
         return compiledPlan;

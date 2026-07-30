@@ -11,13 +11,43 @@ class ExecutionExecutor {
         const rows = worksheetData.getRows();
         const predicates = compiledPlan.getPredicates();
 
+        // ==========================================================
+        // Debug
+        // ==========================================================
+
+        context.getDebug().add(
+            "ExecutionExecutor",
+            {
+                rowsLoaded: rows.length,
+                predicateCount: predicates.length
+            }
+        );
+
         for (let i = 0; i < rows.length; i++) {
 
             const row = rows[i];
 
             executionStats.rowsExamined++;
 
-            if (this.matches(row, predicates)) {
+            context.getDebug().add(
+                "Row",
+                {
+                    index: i,
+                    values: row.values
+                }
+            );
+
+            const matched = this.matches(context, row, predicates);
+
+            context.getDebug().add(
+                "Row Result",
+                {
+                    index: i,
+                    matched: matched
+                }
+            );
+
+            if (matched) {
 
                 executionStats.rowsMatched++;
 
@@ -25,14 +55,37 @@ class ExecutionExecutor {
             }
         }
 
+        context.getDebug().add(
+            "Execution Summary",
+            {
+                rowsExamined: executionStats.rowsExamined,
+                rowsMatched: executionStats.rowsMatched
+            }
+        );
+
         return result;
     }
 
-    matches(row, predicates) {
+    matches(context, row, predicates) {
 
         for (let i = 0; i < predicates.length; i++) {
 
-            if (!predicates[i].matches(row)) {
+            const predicate = predicates[i];
+
+            const matched = predicate.matches(row);
+
+            context.getDebug().add(
+                "Predicate Evaluation",
+                {
+                    predicate: predicate.constructor.name,
+                    columnIndex: predicate.columnIndex,
+                    expectedValue: predicate.expectedValue,
+                    actualValue: row.values[predicate.columnIndex],
+                    matched: matched
+                }
+            );
+
+            if (!matched) {
                 return false;
             }
 

@@ -11,6 +11,10 @@ class DebugContext {
         });
     }
 
+    addMessage(message) {
+        this.add("Message", message);
+    }
+
     getEntries() {
         return this.entries;
     }

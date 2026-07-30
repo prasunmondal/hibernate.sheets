@@ -36,7 +36,7 @@ class ExecutionService {
 
         const plan =
             this.planBuilder.build(
-                operation
+                context, operation
             );
 
         const result =
@@ -53,14 +53,30 @@ class ExecutionService {
             );
 
         //////////////// Debug
-        context.response.debug = {
-            rowsLoaded: worksheetData.getRows().length,
-            schema: worksheetData.getSchema(),
-            predicates: plan.getPredicates().length
-        };
+        context.response.debug = context.getDebug().getEntries();
 
         context.response.addResult(
             apiResult
+        );
+
+        context.getDebug().add(
+            "Worksheet",
+            worksheetData.getWorksheet().name
+        );
+
+        context.getDebug().add(
+            "Rows Loaded",
+            worksheetData.getRows().length
+        );
+
+        context.getDebug().add(
+            "Schema",
+            worksheetData.getSchema()
+        );
+
+        context.getDebug().add(
+            "Predicates",
+            plan.getPredicates().length
         );
     }
 

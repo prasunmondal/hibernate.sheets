@@ -10,7 +10,7 @@ class CompiledEqualsPredicate extends CompiledPredicate {
 
     matches(row) {
 
-        return row.values[this.columnIndex] === this.expectedValue;
+        return String(row.values[this.columnIndex]) === this.expectedValue;
 
     }
 

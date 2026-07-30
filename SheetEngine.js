@@ -30,13 +30,14 @@ class SheetEngine {
             const request =
                 RequestParser.parse(json);
 
-            RequestValidator.validate(request);
-
             const context =
                 new ExecutionContext(
                     request,
                     this.registry
                 );
+
+            RequestValidator.validate(request);
+
 
             context.provider =
                 new GoogleSheetsProvider(

@@ -1,6 +1,6 @@
 class ExecutionPlanBuilder {
 
-    build(operation) {
+    build(context, operation) {
 
         const plan =
             new ExecutionPlan();

@@ -24,6 +24,7 @@ class ExecutionEngine {
             Stopwatch.measure(() => {
 
                 return this.compiler.compile(
+                    context,
                     worksheetData,
                     executionPlan
                 );

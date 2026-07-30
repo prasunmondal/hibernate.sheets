@@ -1,6 +1,6 @@
 class SchemaBuilder {
 
-    build(worksheetData, rawWorksheet) {
+    build(context, worksheetData, rawWorksheet) {
 
         const schema = worksheetData.getSchema();
         const headers = rawWorksheet.getHeaders();
