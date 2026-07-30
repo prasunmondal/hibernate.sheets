@@ -59,12 +59,12 @@ class SheetEngine {
         } catch (ex) {
 
             return ContentService
-                .createTextOutput(
-                    JSON.stringify({
-                        success: false,
-                        error: ex.message
-                    })
-                )
+                .createTextOutput(JSON.stringify({
+                    success: false,
+                    error: ex.message,
+                    exceptionType: ex.name,
+                    stackTrace: ex.stack ? ex.stack.split("\n") : []
+                }))
                 .setMimeType(ContentService.MimeType.JSON);
 
         }

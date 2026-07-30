@@ -12,6 +12,9 @@ class ApiResponse {
 
         this.errors = [];
 
+        this.debug = [];
+        this.exception = null;
+
     }
 
     addResult(result) {
