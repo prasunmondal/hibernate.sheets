@@ -49,6 +49,10 @@ class RequestParser {
         operation.offset =
             json.offset ?? 0;
 
+        operation.setId(
+            json.id
+        );
+
         if (Array.isArray(json.where)) {
 
             for (const where of json.where) {

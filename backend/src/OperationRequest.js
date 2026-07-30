@@ -2,6 +2,8 @@ class OperationRequest {
 
     constructor() {
 
+        this.id = "";
+
         this.type = OperationType.SELECT;
 
         this.spreadsheet = "";
@@ -52,6 +54,38 @@ class OperationRequest {
 
     getOffset() {
         return this.offset
+    }
+
+    getId() {
+
+        return this.id;
+
+    }
+
+    setId(id) {
+
+        this.id = id;
+
+        return this;
+
+    }
+
+    getType() {
+
+        return this.type;
+
+    }
+
+    getSpreadsheet() {
+
+        return this.spreadsheet;
+
+    }
+
+    getWorksheet() {
+
+        return this.worksheet;
+
     }
 
 }

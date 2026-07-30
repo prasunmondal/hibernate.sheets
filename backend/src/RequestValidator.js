@@ -14,6 +14,23 @@ class RequestValidator {
             );
         }
 
+        const ids = new Set();
+
+        for (const operation of operations) {
+
+            if (ids.has(operation.getId())) {
+
+                throw new Error(
+                    "Duplicate operation id: " +
+                    operation.getId()
+                );
+
+            }
+
+            ids.add(operation.getId());
+
+        }
+
         for (let i = 0; i < operations.length; i++) {
             this.validateOperation(
                 operations[i],
@@ -30,6 +47,11 @@ class RequestValidator {
                 "Operation " + index + " is null."
             );
         }
+
+        this.require(
+            operation.getId(),
+            "Operation " + index + " must specify an id."
+        );
 
         switch (operation.type) {
 

@@ -7,12 +7,18 @@ class ResultMapper {
 
     }
 
-    map(result, worksheetData) {
+    map(operation,
+        result,
+        worksheetData) {
 
         const schema =
             worksheetData.getSchema();
 
         return {
+
+            operationId: operation.getId(),
+
+            operationType: operation.getType(),
 
             rowCount:
                 result.getRowCount(),

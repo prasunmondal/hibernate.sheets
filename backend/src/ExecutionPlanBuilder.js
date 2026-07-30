@@ -5,6 +5,8 @@ class ExecutionPlanBuilder {
         const plan =
             new ExecutionPlan();
 
+        plan.setId(operation.getId());
+
         for (const predicate of operation.getPredicates()) {
 
             plan.addPredicate(predicate);
@@ -13,7 +15,9 @@ class ExecutionPlanBuilder {
 
         plan.setLimit(operation.getLimit());
 
-        plan.setOffset(operation.offset);
+        plan.setOffset(
+            operation.getOffset()
+        );
 
         for (const order of operation.getOrderBy()) {
             plan.addOrderBy(order);

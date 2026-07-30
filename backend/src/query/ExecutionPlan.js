@@ -2,6 +2,7 @@ class ExecutionPlan {
 
     constructor() {
 
+        this.id = "";
         this.predicates = [];
         this.limit = -1;
         this.offset = 0;
@@ -85,6 +86,17 @@ class ExecutionPlan {
 
         return this;
 
+    }
+
+    getId() {
+
+        return this.id;
+
+    }
+
+    setId(id) {
+        this.id = id;
+        return this
     }
 
 }

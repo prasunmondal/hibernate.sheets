@@ -48,6 +48,7 @@ class ExecutionService {
 
         const apiResult =
             this.resultMapper.map(
+                operation,
                 result,
                 worksheetData
             );
