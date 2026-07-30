@@ -10,6 +10,8 @@ class OperationRequest {
 
         this.predicates = [];
 
+        this.orderBy=[];
+
         this.limit = -1;
 
         this.offset = 0;
@@ -28,6 +30,28 @@ class OperationRequest {
 
         return this.predicates;
 
+    }
+
+    addOrderBy(order) {
+
+        this.orderBy.push(order);
+
+        return this;
+
+    }
+
+    getOrderBy() {
+
+        return this.orderBy;
+
+    }
+
+    getLimit() {
+        return this.limit
+    }
+
+    getOffset() {
+        return this.offset
     }
 
 }

@@ -61,7 +61,7 @@ class ExecutionService {
 
         context.getDebug().add(
             "Worksheet",
-            worksheetData.getWorksheet().name
+            worksheetData.worksheet
         );
 
         context.getDebug().add(

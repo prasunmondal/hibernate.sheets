@@ -6,7 +6,7 @@ class ExecutionPlan {
         this.limit = -1;
         this.offset = 0;
 
-        this.sorters = [];
+        this.orderBy = [];
         this.projections = [];
 
         this.useIndexes = true;
@@ -62,6 +62,28 @@ class ExecutionPlan {
     isUseIndexes() {
 
         return this.useIndexes;
+
+    }
+
+    addOrderBy(order) {
+
+        this.orderBy.push(order);
+
+        return this;
+
+    }
+
+    getOrderBy() {
+
+        return this.orderBy;
+
+    }
+
+    setOrderBy(orderBy) {
+
+        this.orderBy = orderBy || [];
+
+        return this;
 
     }
 

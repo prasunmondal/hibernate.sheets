@@ -18,6 +18,12 @@ class ExecutionResult {
 
     }
 
+    setRows(rows) {
+
+        this.rows = rows;
+
+    }
+
     getRowCount() {
 
         return this.rows.length;

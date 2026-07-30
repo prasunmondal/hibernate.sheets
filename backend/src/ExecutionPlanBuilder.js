@@ -11,9 +11,13 @@ class ExecutionPlanBuilder {
 
         }
 
-        plan.setLimit(operation.limit);
+        plan.setLimit(operation.getLimit());
 
         plan.setOffset(operation.offset);
+
+        for (const order of operation.getOrderBy()) {
+            plan.addOrderBy(order);
+        }
 
         // console.log("Execution Plan: " + JSON.stringify(plan));
         context.getDebug().add("Execution Plan", plan);

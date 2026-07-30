@@ -8,6 +8,12 @@ class ExecutionEngine {
         this.executor =
             executor ?? new ExecutionExecutor();
 
+        this.executionSorter =
+            new ExecutionSorter();
+
+        this.paginator =
+            new ExecutionPaginator();
+
     }
 
     execute(context,
@@ -40,12 +46,20 @@ class ExecutionEngine {
         const execute =
             Stopwatch.measure(() => {
 
-                return this.executor.execute(
-                    context,
-                    worksheetData,
-                    compile.result
-                );
+                // const result = executor.execute(context, worksheetData, compile.result);
 
+                const result =
+                    this.executor.execute(
+                        context,
+                        worksheetData,
+                        compile.result
+                    );
+
+                this.executionSorter.sort(result, compile.result);
+
+                this.paginator.paginate(result, compile.result);
+
+                return result;
             });
 
         executionStats.executeTime =

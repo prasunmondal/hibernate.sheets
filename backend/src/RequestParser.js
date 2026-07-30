@@ -61,6 +61,23 @@ class RequestParser {
 
         }
 
+        if (Array.isArray(json.orderBy)) {
+
+            for (const item of json.orderBy) {
+
+                operation.addOrderBy(
+
+                    new OrderBy(
+                        item.column,
+                        item.direction
+                    )
+
+                );
+
+            }
+
+        }
+
         return operation;
 
     }

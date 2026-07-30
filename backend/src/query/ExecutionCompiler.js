@@ -1,11 +1,21 @@
 class ExecutionCompiler {
 
-    compile(context, worksheetData, executionPlan) {
+    compile(context,
+            worksheetData,
+            executionPlan) {
 
         const compiledPlan = new CompiledPlan();
 
+        const schema = worksheetData.getSchema();
+
         this.compilePredicates(
-            worksheetData.getSchema(),
+            schema,
+            executionPlan,
+            compiledPlan
+        );
+
+        this.compileOrderBy(
+            schema,
             executionPlan,
             compiledPlan
         );
@@ -20,6 +30,11 @@ class ExecutionCompiler {
             compiledPlan.getPredicates().length
         );
 
+        context.getDebug().add(
+            "Compiled Order By",
+            compiledPlan.getOrderBy().length
+        );
+
         return compiledPlan;
 
     }
@@ -29,6 +44,10 @@ class ExecutionCompiler {
                       compiledPlan) {
 
         const predicates = executionPlan.getPredicates();
+
+        if (!predicates) {
+            return;
+        }
 
         for (let i = 0; i < predicates.length; i++) {
 
@@ -83,6 +102,47 @@ class ExecutionCompiler {
             columnIndex,
             predicate.getExpectedValue()
         );
+
+    }
+
+    compileOrderBy(schema,
+                   executionPlan,
+                   compiledPlan) {
+
+        const orderBy = executionPlan.getOrderBy();
+
+        if (!orderBy || orderBy.length === 0) {
+            return;
+        }
+
+        for (let i = 0; i < orderBy.length; i++) {
+
+            const item = orderBy[i];
+
+            const columnIndex =
+                schema.getColumnIndex(
+                    item.getColumnName()
+                );
+
+            if (columnIndex < 0) {
+
+                throw new Error(
+                    "Unknown column: " +
+                    item.getColumnName()
+                );
+
+            }
+
+            compiledPlan.addOrderBy(
+
+                new CompiledOrderBy(
+                    columnIndex,
+                    item.getDirection()
+                )
+
+            );
+
+        }
 
     }
 

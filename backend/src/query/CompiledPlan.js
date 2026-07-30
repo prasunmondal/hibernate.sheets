@@ -3,10 +3,31 @@ class CompiledPlan {
     constructor() {
 
         this.predicates = [];
+        this.orderBy = [];
 
         this.limit = -1;
 
         this.offset = 0;
+
+    }
+
+    setOrderBy(orderBy) {
+
+        this.orderBy = orderBy || [];
+
+    }
+
+    addOrderBy(order) {
+
+        this.orderBy.push(order);
+
+        return this;
+
+    }
+
+    getOrderBy() {
+
+        return this.orderBy;
 
     }
 

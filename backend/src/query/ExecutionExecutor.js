@@ -6,6 +6,12 @@ class ExecutionExecutor {
 
         const result = new ExecutionResult();
 
+        this.executionSorter =
+            new ExecutionSorter();
+
+        this.paginator =
+            new ExecutionPaginator();
+
         const executionStats = context.statistics.execution;
 
         const rows = worksheetData.getRows();
@@ -19,12 +25,6 @@ class ExecutionExecutor {
             throw new Error("compiledPlan.getPredicates() returned undefined");
         }
 
-        const limit = compiledPlan.getLimit();
-        const offset = compiledPlan.getOffset();
-
-        let matchedCount = 0;
-        let returnedCount = 0;
-
         for (let i = 0; i < rows.length; i++) {
 
             const row = rows[i];
@@ -37,28 +37,7 @@ class ExecutionExecutor {
 
             executionStats.rowsMatched++;
 
-            //
-            // Skip rows until OFFSET is reached
-            //
-            if (matchedCount < offset) {
-                matchedCount++;
-                continue;
-            }
-
-            //
-            // Return current row
-            //
             result.addRow(row);
-
-            matchedCount++;
-            returnedCount++;
-
-            //
-            // Stop once LIMIT is reached
-            //
-            if (limit >= 0 && returnedCount >= limit) {
-                break;
-            }
 
         }
 
