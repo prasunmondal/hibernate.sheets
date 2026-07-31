@@ -6,12 +6,6 @@ class ExecutionExecutor {
 
         const result = new ExecutionResult();
 
-        this.executionSorter =
-            new ExecutionSorter();
-
-        this.paginator =
-            new ExecutionPaginator();
-
         const executionStats = context.statistics.execution;
 
         const rows = worksheetData.getRows();

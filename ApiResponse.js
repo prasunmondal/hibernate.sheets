@@ -30,5 +30,4 @@ class ApiResponse {
         this.errors.push(error);
 
     }
-
 }
