@@ -6,7 +6,7 @@ class ExecutionPlanBuilder {
             new ExecutionPlan();
 
         plan.setId(operation.getId());
-
+        plan.setType(operation.getType());
 
         for (const predicate of operation.getPredicates()) {
 
@@ -26,6 +26,10 @@ class ExecutionPlanBuilder {
 
         for (const projection of operation.getProjections()) {
             plan.addProjection(projection);
+        }
+
+        for (const value of operation.getValues()) {
+            plan.addValue(value);
         }
 
         // console.log("Execution Plan: " + JSON.stringify(plan));

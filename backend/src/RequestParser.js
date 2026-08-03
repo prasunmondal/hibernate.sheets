@@ -102,6 +102,19 @@ class RequestParser {
 
         }
 
+        for (const column in json.values) {
+
+            operation.addValue(
+
+                new ColumnValue(
+                    column,
+                    json.values[column]
+                )
+
+            );
+
+        }
+
         return operation;
 
     }

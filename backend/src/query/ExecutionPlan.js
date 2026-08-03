@@ -9,8 +9,10 @@ class ExecutionPlan {
 
         this.orderBy = [];
         this.projections = [];
+        this.values = [];
 
         this.useIndexes = true;
+        this.type = OperationType.SELECT;
 
     }
 
@@ -19,6 +21,24 @@ class ExecutionPlan {
         this.predicates.push(predicate);
         return this;
 
+    }
+
+    setType(type) {
+        this.type = type
+        return this
+    }
+
+    getType() {
+        return this.type
+    }
+
+    addValue(value) {
+        this.values.push(value);
+        return this;
+    }
+
+    getValues() {
+        return this.values;
     }
 
     getPredicates() {

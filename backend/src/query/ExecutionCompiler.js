@@ -30,6 +30,12 @@ class ExecutionCompiler {
             compiledPlan
         );
 
+        this.compileValues(
+            schema,
+            executionPlan,
+            compiledPlan
+        );
+
         this.copyPaging(
             executionPlan,
             compiledPlan
@@ -205,6 +211,62 @@ class ExecutionCompiler {
             columnIndex,
 
             projection.getColumnName()
+
+        );
+
+    }
+
+    compileValues(schema,
+                  executionPlan,
+                  compiledPlan) {
+
+        const values =
+            executionPlan.getValues();
+
+        if (!values ||
+            values.length === 0) {
+            return;
+        }
+
+        for (let i = 0; i < values.length; i++) {
+
+            compiledPlan.addValue(
+
+                this.compileValue(
+                    schema,
+                    values[i]
+                )
+
+            );
+
+        }
+
+    }
+
+    compileValue(schema,
+                 value) {
+
+        const columnIndex =
+            schema.getColumnIndex(
+                value.getColumnName()
+            );
+
+        if (columnIndex < 0) {
+
+            throw new Error(
+                "Unknown column: " +
+                value.getColumnName()
+            );
+
+        }
+
+        return new CompiledColumnValue(
+
+            columnIndex,
+
+            value.getColumnName(),
+
+            value.getValue()
 
         );
 

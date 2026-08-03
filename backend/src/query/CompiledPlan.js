@@ -11,7 +11,7 @@ class CompiledPlan {
         this.offset = 0;
 
         this.projections = [];
-
+        this.values = [];
     }
 
     setOrderBy(orderBy) {
@@ -26,6 +26,15 @@ class CompiledPlan {
 
         return this;
 
+    }
+
+    addValue(value) {
+        this.values.push(value)
+        return this
+    }
+
+    getValues() {
+        return this.values;
     }
 
     getOrderBy() {

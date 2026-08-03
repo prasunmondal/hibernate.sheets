@@ -127,9 +127,10 @@ class RequestValidator {
 
     static validateInsert(operation, index) {
 
-        throw new Error(
-            "INSERT is not implemented."
-        );
+        return true
+        // throw new Error(
+        //     "INSERT is not implemented."
+        // );
 
     }
 

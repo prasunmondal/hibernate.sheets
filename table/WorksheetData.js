@@ -56,4 +56,12 @@ class WorksheetData {
 
     }
 
+    getColumnCount() {
+
+        return this.schema
+            .getColumns()
+            .length;
+
+    }
+
 }
