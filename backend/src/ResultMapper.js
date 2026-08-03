@@ -2,23 +2,19 @@ class ResultMapper {
 
     constructor() {
 
-        this.rowMapper =
-            new RowMapper();
+        this.columnValueMapper =
+            new ColumnValueMapper();
 
     }
 
-    map(operation,
+    map(compiledPlan,
         result,
         worksheetData) {
 
-        const schema =
-            worksheetData.getSchema();
-
         return {
 
-            operationId: operation.getId(),
-
-            operationType: operation.getType(),
+            operationId:
+                compiledPlan.getId(),
 
             rowCount:
                 result.getRowCount(),
@@ -26,29 +22,118 @@ class ResultMapper {
             rows:
                 this.mapRows(
                     result.getRows(),
-                    schema
+                    worksheetData.getSchema(),
+                    compiledPlan.getProjections()
                 )
 
         };
 
     }
 
-    mapRows(rows, schema) {
+    mapRows(rows,
+            schema,
+            projections) {
 
         const mapped = [];
 
         for (let i = 0; i < rows.length; i++) {
 
             mapped.push(
-                this.rowMapper.map(
+
+                this.mapRow(
                     rows[i],
-                    schema
+                    schema,
+                    projections
                 )
+
             );
 
         }
 
         return mapped;
+
+    }
+
+    mapRow(row,
+           schema,
+           projections) {
+
+        //
+        // SELECT *
+        //
+        if (!projections ||
+            projections.length === 0) {
+
+            return this.mapAllColumns(
+                row,
+                schema
+            );
+
+        }
+
+        //
+        // SELECT col1,col2...
+        //
+        const object = {};
+
+        for (let i = 0; i < projections.length; i++) {
+
+            const projection =
+                projections[i];
+
+            // context.getDebug().add(
+            //     "Projection",
+            //     projection
+            // );
+
+            const column =
+                schema.getColumns()[
+                    projection.columnIndex
+                    ];
+
+            if (!column) {
+
+                throw new Error(
+                    "Invalid projection columnIndex: " +
+                    projection.columnIndex
+                );
+
+            }
+
+            object[column.name] =
+                this.columnValueMapper.map(
+                    row.get(projection.columnIndex),
+                    column
+                );
+
+        }
+
+        return object;
+
+    }
+
+    mapAllColumns(row,
+                  schema) {
+
+        const object = {};
+
+        const columns =
+            schema.getColumns();
+
+        for (let i = 0; i < columns.length; i++) {
+
+            const column =
+                columns[i];
+
+            object[column.name] =
+                this.columnValueMapper.map(
+                    row.get(i),
+                    column
+                );
+
+        }
+
+        return object;
 
     }
 

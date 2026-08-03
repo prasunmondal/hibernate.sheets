@@ -1,6 +1,7 @@
 class CompiledPlan {
 
     constructor() {
+        this.id = "";
 
         this.predicates = [];
         this.orderBy = [];
@@ -8,6 +9,8 @@ class CompiledPlan {
         this.limit = -1;
 
         this.offset = 0;
+
+        this.projections = [];
 
     }
 
@@ -66,6 +69,31 @@ class CompiledPlan {
     getOffset() {
 
         return this.offset;
+
+    }
+
+    addProjection(projection) {
+
+        this.projections.push(projection);
+
+        return this;
+
+    }
+
+    getProjections() {
+        return this.projections
+    }
+
+    setId(id) {
+
+        this.id = id;
+        return this;
+
+    }
+
+    getId() {
+
+        return this.id;
 
     }
 

@@ -39,7 +39,7 @@ class ExecutionService {
                 context, operation
             );
 
-        const result =
+        const execution =
             this.engine.execute(
                 context,
                 worksheetData,
@@ -48,8 +48,8 @@ class ExecutionService {
 
         const apiResult =
             this.resultMapper.map(
-                operation,
-                result,
+                execution.compiledPlan,
+                execution.result,
                 worksheetData
             );
 

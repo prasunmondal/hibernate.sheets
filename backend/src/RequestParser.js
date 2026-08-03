@@ -82,6 +82,26 @@ class RequestParser {
 
         }
 
+        if (Array.isArray(json.select)) {
+
+            for (const column of json.select) {
+
+                if (typeof column !== "string") {
+
+                    throw new Error(
+                        "select must contain only column names."
+                    );
+
+                }
+
+                operation.addProjection(
+                    new Projection(column)
+                );
+
+            }
+
+        }
+
         return operation;
 
     }

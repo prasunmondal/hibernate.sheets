@@ -99,4 +99,16 @@ class ExecutionPlan {
         return this
     }
 
+    addProjection(projection) {
+
+        this.projections.push(projection);
+
+        return this;
+
+    }
+
+    getProjections() {
+        return this.projections
+    }
+
 }

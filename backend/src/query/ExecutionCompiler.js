@@ -6,6 +6,10 @@ class ExecutionCompiler {
 
         const compiledPlan = new CompiledPlan();
 
+        compiledPlan.setId(
+            executionPlan.getId()
+        );
+
         const schema = worksheetData.getSchema();
 
         this.compilePredicates(
@@ -15,6 +19,12 @@ class ExecutionCompiler {
         );
 
         this.compileOrderBy(
+            schema,
+            executionPlan,
+            compiledPlan
+        );
+
+        this.compileProjections(
             schema,
             executionPlan,
             compiledPlan
@@ -143,6 +153,60 @@ class ExecutionCompiler {
             );
 
         }
+
+    }
+
+    compileProjections(schema,
+                       executionPlan,
+                       compiledPlan) {
+
+        const projections =
+            executionPlan.getProjections();
+
+        if (!projections ||
+            projections.length === 0) {
+            return;
+        }
+
+        for (let i = 0; i < projections.length; i++) {
+
+            compiledPlan.addProjection(
+
+                this.compileProjection(
+                    schema,
+                    projections[i]
+                )
+
+            );
+
+        }
+
+    }
+
+    compileProjection(schema,
+                      projection) {
+
+        const columnIndex =
+            schema.getColumnIndex(
+                projection.getColumnName()
+            );
+
+        if (columnIndex < 0) {
+
+            throw new Error(
+                "Unknown column: " +
+                projection.getColumnName()
+            );
+
+        }
+
+        return new CompiledProjection(
+
+            columnIndex,
+
+            projection.getColumnName()
+
+        );
 
     }
 

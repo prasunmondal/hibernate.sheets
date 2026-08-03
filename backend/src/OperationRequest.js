@@ -18,6 +18,8 @@ class OperationRequest {
 
         this.offset = 0;
 
+        this.projections = [];
+
     }
 
     addPredicate(predicate) {
@@ -83,9 +85,16 @@ class OperationRequest {
     }
 
     getWorksheet() {
-
         return this.worksheet;
+    }
 
+    addProjection(projection) {
+        this.projections.push(projection);
+        return this;
+    }
+
+    getProjections() {
+        return this.projections
     }
 
 }
