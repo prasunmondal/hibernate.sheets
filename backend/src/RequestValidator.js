@@ -145,10 +145,10 @@ class RequestValidator {
 
     static validateDelete(operation, index) {
 
-        throw new Error(
-            "DELETE is not implemented."
-        );
-
+        return true;
+        // throw new Error(
+        //     "DELETE is not implemented."
+        // );
     }
 
     static validateUpsert(operation, index) {

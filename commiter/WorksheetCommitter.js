@@ -23,6 +23,12 @@ class WorksheetCommitter {
             changeSet.updated
         );
 
+        this.commitDeleted(
+            worksheet,
+            worksheetData,
+            changeSet.deleted
+        );
+
         changeSet.clear();
 
     }
@@ -88,6 +94,29 @@ class WorksheetCommitter {
                     row.values
                 ]);
 
+        }
+
+    }
+
+    commitDeleted(worksheet,
+                  worksheetData,
+                  rows) {
+
+        if (!rows || rows.length === 0) {
+            return;
+        }
+
+        //
+        // Delete from bottom to top
+        //
+        rows.sort(function (a, b) {
+            return b.sheetRow - a.sheetRow;
+        });
+
+        for (const row of rows) {
+            worksheet.deleteRow(
+                row.sheetRow
+            );
         }
 
     }
