@@ -23,6 +23,9 @@ class ExecutionEngine {
         this.upsertExecutor =
             new UpsertExecutor();
 
+        this.cloneExecutor =
+            new CloneExecutor();
+
         this.executionSorter =
             new ExecutionSorter();
 
@@ -107,6 +110,17 @@ class ExecutionEngine {
 
                 result =
                     this.upsertExecutor.execute(
+                        context,
+                        worksheetData,
+                        compiledPlan
+                    );
+
+                break;
+
+            case OperationType.CLONE:
+
+                result =
+                    this.cloneExecutor.execute(
                         context,
                         worksheetData,
                         compiledPlan

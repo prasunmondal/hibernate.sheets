@@ -75,6 +75,10 @@ class RequestValidator {
                 this.validateUpsert(operation, index);
                 break;
 
+            case OperationType.CLONE:
+                this.validateClone(operation, index);
+                break;
+
             default:
                 throw new Error(
                     "Unsupported operation type: " +
@@ -155,6 +159,14 @@ class RequestValidator {
         return true;
         // throw new Error(
         //     "UPSERT is not implemented."
+        // );
+
+    }
+
+    static validateClone(operation, index) {
+        return true;
+        // throw new Error(
+        //     "CLONE is not implemented."
         // );
 
     }
