@@ -10,6 +10,10 @@ class ExecutionCompiler {
             executionPlan.getId()
         );
 
+        compiledPlan.setType(
+            executionPlan.getType()
+        );
+
         const schema = worksheetData.getSchema();
 
         this.compilePredicates(

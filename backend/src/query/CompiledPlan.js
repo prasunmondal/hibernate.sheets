@@ -12,6 +12,16 @@ class CompiledPlan {
 
         this.projections = [];
         this.values = [];
+        this.type = OperationType.SELECT;
+    }
+
+    setType(type) {
+        this.type = type;
+        return this;
+    }
+
+    getType() {
+        return this.type;
     }
 
     setOrderBy(orderBy) {

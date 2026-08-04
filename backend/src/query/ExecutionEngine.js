@@ -8,6 +8,21 @@ class ExecutionEngine {
         this.executor =
             executor ?? new ExecutionExecutor();
 
+        this.selectExecutor =
+            new SelectExecutor();
+
+        this.insertExecutor =
+            new InsertExecutor();
+
+        this.updateExecutor =
+            new UpdateExecutor();
+
+        this.deleteExecutor =
+            new DeleteExecutor();
+
+        this.upsertExecutor =
+            new UpsertExecutor();
+
         this.executionSorter =
             new ExecutionSorter();
 
@@ -20,68 +35,9 @@ class ExecutionEngine {
             worksheetData,
             executionPlan) {
 
-        switch (executionPlan.getType()) {
-
-            case OperationType.SELECT:
-                return this.executeSelect(
-                    context,
-                    worksheetData,
-                    executionPlan
-                );
-
-            case OperationType.INSERT:
-                return this.executeInsert(
-                    context,
-                    worksheetData,
-                    executionPlan
-                );
-
-            case OperationType.UPDATE:
-                return this.executeUpdate(
-                    context,
-                    worksheetData,
-                    this.compiler.compile(
-                        context,
-                        worksheetData,
-                        executionPlan
-                    )
-                );
-
-            case OperationType.DELETE:
-                return this.executeDelete(
-                    context,
-                    worksheetData,
-                    executionPlan
-                );
-
-            case OperationType.UPSERT:
-                return this.executeUpsert(
-                    context,
-                    worksheetData,
-                    executionPlan
-                );
-
-            default:
-
-                throw new Error(
-                    "Unsupported operation type: " +
-                    executionPlan.getType()
-                );
-
-        }
-
-    }
-
-    executeSelect(context,
-                  worksheetData,
-                  executionPlan) {
-
         const executionStats =
             context.statistics.execution;
 
-        //
-        // Compile
-        //
         const compile =
             Stopwatch.measure(() => {
 
@@ -96,180 +52,74 @@ class ExecutionEngine {
         executionStats.compileTime =
             compile.elapsed;
 
-        //
-        // Execute
-        //
-        const execute =
-            Stopwatch.measure(() => {
+        const compiledPlan =
+            compile.result;
 
-                const result =
-                    this.executor.execute(
+        let result;
+
+        switch (compiledPlan.getType()) {
+
+            case OperationType.SELECT:
+
+                result =
+                    this.selectExecutor.execute(
                         context,
                         worksheetData,
-                        compile.result
+                        compiledPlan
                     );
 
-                this.executionSorter.sort(
-                    result,
-                    compile.result
+                break;
+
+            case OperationType.INSERT:
+
+                result =
+                    this.insertExecutor.execute(
+                        context,
+                        worksheetData,
+                        compiledPlan
+                    );
+
+                break;
+
+            case OperationType.UPDATE:
+
+                result =
+                    this.updateExecutor.execute(
+                        context,
+                        worksheetData,
+                        compiledPlan
+                    );
+
+                break;
+
+            case OperationType.DELETE:
+
+                result =
+                    this.deleteExecutor.execute(
+                        context,
+                        worksheetData,
+                        compiledPlan
+                    );
+
+                break;
+
+            case OperationType.UPSERT:
+
+                result =
+                    this.upsertExecutor.execute(
+                        context,
+                        worksheetData,
+                        compiledPlan
+                    );
+
+                break;
+
+            default:
+
+                throw new Error(
+                    "Unsupported operation type: " +
+                    compiledPlan.getType()
                 );
-
-                this.paginator.paginate(
-                    result,
-                    compile.result
-                );
-
-                return result;
-
-            });
-
-        executionStats.executeTime =
-            execute.elapsed;
-
-        executionStats.totalTime =
-            executionStats.compileTime +
-            executionStats.executeTime;
-
-        return {
-
-            compiledPlan:
-            compile.result,
-
-            result:
-            execute.result
-
-        };
-
-    }
-
-
-
-    //
-    // TODO
-    // Validate required columns
-    // Validate primary key
-    // Apply default values
-    // Apply formulas
-    // Apply generated values
-    //
-    executeInsert(context,
-                  worksheetData,
-                  executionPlan) {
-
-        //
-        // Compile
-        //
-        const compile =
-            this.compiler.compile(
-                context,
-                worksheetData,
-                executionPlan
-            );
-
-        const compiledPlan =
-            compile;
-
-        const result =
-            new ExecutionResult();
-
-        //
-        // Allocate row
-        //
-        const values =
-            new Array(
-                worksheetData.getColumnCount()
-            );
-
-        //
-        // Apply compiled values
-        //
-        const compiledValues =
-            compiledPlan.getValues();
-
-        for (let i = 0; i < compiledValues.length; i++) {
-
-            const value =
-                compiledValues[i];
-
-            values[value.columnIndex] =
-                value.value;
-
-        }
-
-        //
-        // Create row
-        //
-        const row =
-            new DataRow(
-                -1,
-                values
-            );
-
-        row.markNew();
-
-        //
-        // Add to worksheet
-        //
-        worksheetData.addRow(row);
-
-        //
-        // Track changes
-        //
-        worksheetData
-            .getChangeSet()
-            .created
-            .push(row);
-
-        //
-        // Return inserted row
-        //
-        result.addRow(row);
-
-        return {
-            compiledPlan: compiledPlan,
-            result: result
-        };
-
-    }
-
-    executeUpdate(context,
-                  worksheetData,
-                  compiledPlan) {
-
-        const result = new ExecutionResult();
-
-        const predicates = compiledPlan.getPredicates();
-        const values = compiledPlan.getValues();
-        const rows = worksheetData.getRows();
-
-        for (let i = 0; i < rows.length; i++) {
-
-            const row = rows[i];
-
-            if (!this.executor.matches(
-                context,
-                row,
-                predicates)) {
-                continue;
-            }
-
-            for (let j = 0; j < values.length; j++) {
-
-                const value = values[j];
-
-                row.set(
-                    value.columnIndex,
-                    value.value
-                );
-
-            }
-
-            worksheetData
-                .getChangeSet()
-                .updated
-                .push(row);
-
-            result.addRow(row);
 
         }
 
@@ -277,27 +127,5 @@ class ExecutionEngine {
             compiledPlan: compiledPlan,
             result: result
         };
-
     }
-
-    executeDelete(context,
-                  worksheetData,
-                  executionPlan) {
-
-        throw new Error(
-            "DELETE is not implemented."
-        );
-
-    }
-
-    executeUpsert(context,
-                  worksheetData,
-                  executionPlan) {
-
-        throw new Error(
-            "UPSERT is not implemented."
-        );
-
-    }
-
 }
