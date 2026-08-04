@@ -12,20 +12,20 @@
     ".json"
   ],
   "filePushOrder": [
-    "backend/src/query/Predicate.js",
-    "backend/src/query/EqualsPredicate.js",
-    "backend/src/query/Predicates.js",
+    "backend/execution/predicate/Predicate.js",
+    "backend/execution/predicate/EqualsPredicate.js",
+    "backend/execution/predicate/Predicates.js",
 
-    "backend/src/query/CompiledPredicate.js",
-    "backend/src/query/CompiledEqualsPredicate.js",
+    "backend/execution/predicate/CompiledPredicate.js",
+    "backend/execution/predicate/CompiledEqualsPredicate.js",
 
-    "backend/src/query/CompiledPlan.js",
-    "backend/src/query/ExecutionPlan.js",
-    "backend/src/query/ExecutionResult.js",
+    "backend/execution/ExecutionPlan.js",
+    "backend/execution/CompiledPlan.js",
+    "backend/execution/ExecutionResult.js",
 
-    "backend/src/query/ExecutionCompiler.js",
-    "backend/src/query/ExecutionExecutor.js",
-    "backend/src/query/ExecutionEngine.js"
+    "backend/execution/ExecutionCompiler.js",
+    "backend/execution/ExecutionExecutor.js",
+    "backend/execution/ExecutionEngine.js"
   ],
   "skipSubdirectories": false
 }
