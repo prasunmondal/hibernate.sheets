@@ -152,10 +152,10 @@ class RequestValidator {
     }
 
     static validateUpsert(operation, index) {
-
-        throw new Error(
-            "UPSERT is not implemented."
-        );
+        return true;
+        // throw new Error(
+        //     "UPSERT is not implemented."
+        // );
 
     }
 
