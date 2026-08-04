@@ -24,4 +24,10 @@ class WorksheetDataPool {
 
     }
 
+    getAll() {
+
+        return Object.values(this.cache);
+
+    }
+
 }

@@ -21,6 +21,7 @@ class ExecutionService {
                 operation
             );
 
+            context.provider.commitAll();
         }
 
     }

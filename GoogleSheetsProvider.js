@@ -43,4 +43,24 @@ class GoogleSheetsProvider {
 
     }
 
+    commitAll() {
+
+        const references =
+            this.resources.data.getAll();
+
+        for (const reference of references) {
+
+            if (!reference.isLoaded()) {
+                continue;
+            }
+
+            this.committer.commit(
+                reference.data,
+                this.resources
+            );
+
+        }
+
+    }
+
 }
