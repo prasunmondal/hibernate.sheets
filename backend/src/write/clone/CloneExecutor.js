@@ -14,47 +14,20 @@ class CloneExecutor {
         const result =
             new ExecutionResult();
 
-        const predicates =
-            compiledPlan.getPredicates();
-
-        const compiledValues =
-            compiledPlan.getValues();
-
-        const rows =
-            worksheetData.getRows();
-
-        let sourceRow = null;
-
         //
-        // Find exactly one matching row
+        // Find source rows using the existing query engine
         //
-        for (let i = 0; i < rows.length; i++) {
-
-            const row = rows[i];
-
-            if (!this.executor.matches(
+        const sourceRows =
+            this.executor.execute(
                 context,
-                row,
-                predicates
-            )) {
+                worksheetData,
+                compiledPlan
+            );
 
-                continue;
-
-            }
-
-            if (sourceRow !== null) {
-
-                throw new Error(
-                    "CLONE expects exactly one matching row."
-                );
-
-            }
-
-            sourceRow = row;
-
-        }
-
-        if (sourceRow === null) {
+        //
+        // Nothing matched
+        //
+        if (sourceRows.isEmpty()) {
 
             throw new Error(
                 "No matching row found for CLONE."
@@ -62,62 +35,68 @@ class CloneExecutor {
 
         }
 
-        //
-        // Clone values
-        //
-        const values =
-            sourceRow.values.slice();
+        const valuesToApply =
+            compiledPlan.getValues();
 
         //
-        // Apply SET values
+        // Clone every matching row
         //
-        for (let i = 0; i < compiledValues.length; i++) {
+        for (const sourceRow of sourceRows.getRows()) {
 
-            const value =
-                compiledValues[i];
+            //
+            // Clone values
+            //
+            const values =
+                sourceRow.values.slice();
 
-            values[value.columnIndex] =
-                value.value;
+            //
+            // Apply SET values
+            //
+            for (const value of valuesToApply) {
 
-        }
+                values[value.columnIndex] =
+                    value.value;
 
-        //
-        // Create cloned row
-        //
-        const clonedRow =
-            new DataRow(
-                -1,
-                values
+            }
+
+            //
+            // Create cloned row
+            //
+            const clonedRow =
+                new DataRow(
+                    -1,
+                    values
+                );
+
+            clonedRow.markNew();
+
+            //
+            // Add to worksheet
+            //
+            worksheetData.addRow(
+                clonedRow
             );
 
-        clonedRow.markNew();
+            //
+            // Track change
+            //
+            worksheetData
+                .getChangeSet()
+                .created
+                .push(clonedRow);
 
-        //
-        // Add to worksheet
-        //
-        worksheetData.addRow(
-            clonedRow
-        );
+            //
+            // Return cloned row
+            //
+            result.addRow(
+                clonedRow
+            );
 
-        //
-        // Track change
-        //
-        worksheetData
-            .getChangeSet()
-            .created
-            .push(clonedRow);
+            result.inserted++;
 
-        //
-        // Return cloned row
-        //
-        result.addRow(
-            clonedRow
-        );
-
-        result.inserted = 1;
+        }
 
         return result;
 
     }
-
 }
