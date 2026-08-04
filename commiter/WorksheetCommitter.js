@@ -1,7 +1,6 @@
 class WorksheetCommitter {
 
-    commit(worksheetData,
-           resources) {
+    commit(worksheetData, resources) {
 
         const worksheet =
             resources.worksheets.get(
@@ -12,22 +11,36 @@ class WorksheetCommitter {
         const changeSet =
             worksheetData.getChangeSet();
 
-        if (changeSet.created.length === 0) {
+        this.commitCreated(
+            worksheet,
+            worksheetData,
+            changeSet.created
+        );
+
+        this.commitUpdated(
+            worksheet,
+            worksheetData,
+            changeSet.updated
+        );
+
+        changeSet.clear();
+
+    }
+
+    commitCreated(worksheet,
+                  worksheetData,
+                  rows) {
+
+        if (!rows || rows.length === 0) {
             return;
         }
 
-        // Build values...
         const values = [];
 
-        for (const row of changeSet.created) {
-
-            values.push(
-                row.values
-            );
-
+        for (const row of rows) {
+            values.push(row.values);
         }
 
-        // worksheet.getRange(...).setValues(...)
         const startRow =
             worksheet.getLastRow() + 1;
 
@@ -36,18 +49,47 @@ class WorksheetCommitter {
                 startRow,
                 1,
                 values.length,
-                worksheetData.getColumnCount()
+                worksheetData
+                    .getSchema()
+                    .getColumns()
+                    .length
             )
             .setValues(values);
 
-        // changeSet.clear()
-        for (const row of changeSet.created) {
+        for (let i = 0; i < rows.length; i++) {
+            rows[i].sheetRow = startRow + i;
+        }
 
-            row.state = RowState.CLEAN;
+    }
+
+    commitUpdated(worksheet,
+                  worksheetData,
+                  rows) {
+
+        if (rows.length === 0) {
+            return;
+        }
+
+        const columnCount =
+            worksheetData.getSchema()
+                .getColumns()
+                .length;
+
+        for (const row of rows) {
+
+            worksheet
+                .getRange(
+                    row.sheetRow,
+                    1,
+                    1,
+                    columnCount
+                )
+                .setValues([
+                    row.values
+                ]);
 
         }
 
-        changeSet.clear();
     }
 
 }

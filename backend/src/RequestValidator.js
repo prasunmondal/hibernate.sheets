@@ -136,9 +136,10 @@ class RequestValidator {
 
     static validateUpdate(operation, index) {
 
-        throw new Error(
-            "UPDATE is not implemented."
-        );
+        return true
+        // throw new Error(
+        //     "UPDATE is not implemented."
+        // );
 
     }
 

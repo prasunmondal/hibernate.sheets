@@ -40,7 +40,11 @@ class ExecutionEngine {
                 return this.executeUpdate(
                     context,
                     worksheetData,
-                    executionPlan
+                    this.compiler.compile(
+                        context,
+                        worksheetData,
+                        executionPlan
+                    )
                 );
 
             case OperationType.DELETE:
@@ -230,11 +234,49 @@ class ExecutionEngine {
 
     executeUpdate(context,
                   worksheetData,
-                  executionPlan) {
+                  compiledPlan) {
 
-        throw new Error(
-            "UPDATE is not implemented."
-        );
+        const result = new ExecutionResult();
+
+        const predicates = compiledPlan.getPredicates();
+        const values = compiledPlan.getValues();
+        const rows = worksheetData.getRows();
+
+        for (let i = 0; i < rows.length; i++) {
+
+            const row = rows[i];
+
+            if (!this.executor.matches(
+                context,
+                row,
+                predicates)) {
+                continue;
+            }
+
+            for (let j = 0; j < values.length; j++) {
+
+                const value = values[j];
+
+                row.set(
+                    value.columnIndex,
+                    value.value
+                );
+
+            }
+
+            worksheetData
+                .getChangeSet()
+                .updated
+                .push(row);
+
+            result.addRow(row);
+
+        }
+
+        return {
+            compiledPlan: compiledPlan,
+            result: result
+        };
 
     }
 
