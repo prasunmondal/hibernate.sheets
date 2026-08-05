@@ -10,7 +10,7 @@ for /r %%F in (*.js *.ts *.jsx *.tsx *.java *.cs *.cpp *.c *.h *.hpp *.py *.go *
     echo %%~fF | findstr /i /c:"\.idea\" >nul
     if errorlevel 1 (
         echo %%~fF>>"%OUTPUT%"
-        type "%%F">>"%OUTPUT%"
+        findstr /r /v "^$" "%%F">>"%OUTPUT%"
         echo.>>"%OUTPUT%"
         echo.>>"%OUTPUT%"
     )
