@@ -12,51 +12,41 @@
     ".json"
   ],
   "filePushOrder": [
-    // ===== Predicates =====
+
     "backend/execution/predicate/Predicate.js",
+    "backend/execution/predicate/UnaryPredicate.js",
+    "backend/execution/predicate/BinaryPredicate.js",
+    "backend/execution/predicate/MultiValuePredicate.js",
+
     "backend/execution/predicate/EqualsPredicate.js",
-    "backend/execution/predicate/Predicates.js",
+    "backend/execution/predicate/NotEqualsPredicate.js",
+    "backend/execution/predicate/GreaterThanPredicate.js",
+    "backend/execution/predicate/GreaterThanEqualsPredicate.js",
+    "backend/execution/predicate/LessThanPredicate.js",
+    "backend/execution/predicate/LessThanEqualsPredicate.js",
+    "backend/execution/predicate/ContainsPredicate.js",
+    "backend/execution/predicate/StartsWithPredicate.js",
+    "backend/execution/predicate/EndsWithPredicate.js",
+    "backend/execution/predicate/BetweenPredicate.js",
+    "backend/execution/predicate/InPredicate.js",
+    "backend/execution/predicate/IsNullPredicate.js",
+    "backend/execution/predicate/IsNotNullPredicate.js",
 
-    "backend/execution/predicate/CompiledPredicate.js",
-    "backend/execution/predicate/CompiledEqualsPredicate.js",
+    "backend/execution/predicate/compiled/CompiledPredicate.js",
 
-    // ===== Projection =====
-    "backend/execution/projection/Projection.js",
-    "backend/execution/projection/CompiledProjection.js",
-
-    // ===== Ordering =====
-    "backend/execution/order/OrderDirection.js",
-    "backend/execution/order/OrderBy.js",
-    "backend/execution/order/CompiledOrderBy.js",
-
-    // ===== Plans =====
-    "backend/execution/plan/ExecutionPlan.js",
-    "backend/execution/plan/CompiledPlan.js",
-
-    // ===== Results =====
-    "backend/execution/result/ExecutionResult.js",
-
-    // ===== Compiler =====
-    "backend/compiler/ColumnValue.js",
-    "backend/compiler/CompiledColumnValue.js",
-    "backend/compiler/ExecutionCompiler.js",
-
-    // ===== Core Execution =====
-    "backend/execution/ExecutionExecutor.js",
-
-    // ===== Executors =====
-    "backend/execution/order/ExecutionSorter.js",
-    "backend/execution/order/ExecutionPaginator.js",
-
-    "backend/execution/select/SelectExecutor.js",
-    "backend/execution/insert/InsertExecutor.js",
-    "backend/execution/update/UpdateExecutor.js",
-    "backend/execution/delete/DeleteExecutor.js",
-    "backend/execution/upsert/UpsertExecutor.js",
-    "backend/execution/clone/CloneExecutor.js",
-
-    // ===== Engine =====
-    "backend/execution/ExecutionEngine.js"
+    "backend/execution/predicate/compiled/CompiledEqualsPredicate.js",
+    "backend/execution/predicate/compiled/CompiledNotEqualsPredicate.js",
+    "backend/execution/predicate/compiled/CompiledGreaterThanPredicate.js",
+    "backend/execution/predicate/compiled/CompiledGreaterThanEqualsPredicate.js",
+    "backend/execution/predicate/compiled/CompiledLessThanPredicate.js",
+    "backend/execution/predicate/compiled/CompiledLessThanEqualsPredicate.js",
+    "backend/execution/predicate/compiled/CompiledContainsPredicate.js",
+    "backend/execution/predicate/compiled/CompiledStartsWithPredicate.js",
+    "backend/execution/predicate/compiled/CompiledEndsWithPredicate.js",
+    "backend/execution/predicate/compiled/CompiledBetweenPredicate.js",
+    "backend/execution/predicate/compiled/CompiledInPredicate.js",
+    "backend/execution/predicate/compiled/CompiledIsNullPredicate.js",
+    "backend/execution/predicate/compiled/CompiledIsNotNullPredicate.js"
   ],
   "skipSubdirectories": false
 }

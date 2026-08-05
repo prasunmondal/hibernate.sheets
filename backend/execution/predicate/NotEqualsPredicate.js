@@ -1,4 +1,4 @@
-class NotEqualsPredicate extends Predicate {
+class NotEqualsPredicate  extends BinaryPredicate {
 
     constructor(columnName, expectedValue) {
 
@@ -18,6 +18,13 @@ class NotEqualsPredicate extends Predicate {
     getExpectedValue() {
 
         return this.expectedValue;
+
+    }
+
+
+    compiledClass() {
+
+        return CompiledNotEqualsPredicate;
 
     }
 

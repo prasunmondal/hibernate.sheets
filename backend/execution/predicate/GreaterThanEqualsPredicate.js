@@ -1,4 +1,4 @@
-class GreaterThanEqualsPredicate extends Predicate {
+class GreaterThanEqualsPredicate  extends BinaryPredicate {
 
     constructor(columnName, expectedValue) {
 
@@ -18,6 +18,13 @@ class GreaterThanEqualsPredicate extends Predicate {
     getExpectedValue() {
 
         return this.expectedValue;
+
+    }
+
+
+    compiledClass() {
+
+        return CompiledGreaterThanEqualsPredicate;
 
     }
 

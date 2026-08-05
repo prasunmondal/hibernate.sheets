@@ -171,39 +171,79 @@ class RequestValidator {
 
     }
 
+    static validateUnaryPredicate(predicate, index) {
+
+        this.require(
+            predicate.getColumnName(),
+            "Predicate " + index +
+            " must specify a column."
+        );
+
+    }
+
+    static validateBinaryPredicate(predicate, index) {
+
+        this.require(
+            predicate.getColumnName(),
+            "Predicate " + index +
+            " must specify a column."
+        );
+
+        if (predicate.getExpectedValue() === undefined) {
+
+            throw new Error(
+                "Predicate " + index +
+                " must specify a value."
+            );
+
+        }
+
+    }
+
     static validatePredicate(predicate, index) {
 
         if (!predicate) {
+
             throw new Error(
                 "Predicate " + index + " is null."
             );
+
         }
 
+        //
+        // Binary predicates
+        //
         if (
             predicate instanceof EqualsPredicate ||
             predicate instanceof NotEqualsPredicate ||
             predicate instanceof GreaterThanPredicate ||
             predicate instanceof GreaterThanEqualsPredicate ||
             predicate instanceof LessThanPredicate ||
-            predicate instanceof LessThanEqualsPredicate
+            predicate instanceof LessThanEqualsPredicate ||
+            predicate instanceof ContainsPredicate ||
+            predicate instanceof StartsWithPredicate ||
+            predicate instanceof EndsWithPredicate
         ) {
 
-            this.require(
-                predicate.getColumnName(),
-                "Predicate " + index +
-                " must specify a column."
+            return this.validateBinaryPredicate(
+                predicate,
+                index
             );
 
-            if (predicate.getExpectedValue() === undefined) {
+        }
 
-                throw new Error(
-                    "Predicate " + index +
-                    " must specify a value."
-                );
+        //
+        // Unary predicates
+        //
+        if (
+            predicate instanceof IsNullPredicate ||
+            predicate instanceof IsNotNullPredicate
+        ) {
 
-            }
-
-            return;
+            return this.validateUnaryPredicate(
+                predicate,
+                index
+            );
 
         }
 

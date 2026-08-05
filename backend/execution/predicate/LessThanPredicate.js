@@ -1,4 +1,4 @@
-class LessThanPredicate extends Predicate {
+class LessThanPredicate  extends BinaryPredicate {
 
     constructor(columnName, expectedValue) {
 
@@ -18,6 +18,13 @@ class LessThanPredicate extends Predicate {
     getExpectedValue() {
 
         return this.expectedValue;
+
+    }
+
+
+    compiledClass() {
+
+        return CompiledLessThanPredicate;
 
     }
 

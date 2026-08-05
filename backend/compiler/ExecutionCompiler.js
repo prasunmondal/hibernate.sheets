@@ -13,15 +13,15 @@ class ExecutionCompiler {
             [LessThanPredicate, CompiledLessThanPredicate],
             [LessThanEqualsPredicate, CompiledLessThanEqualsPredicate],
 
-            // [ContainsPredicate, CompiledContainsPredicate],
-            // [StartsWithPredicate, CompiledStartsWithPredicate],
-            // [EndsWithPredicate, CompiledEndsWithPredicate],
-            //
+            [ContainsPredicate, CompiledContainsPredicate],
+            [StartsWithPredicate, CompiledStartsWithPredicate],
+            [EndsWithPredicate, CompiledEndsWithPredicate],
+
             // [InPredicate, CompiledInPredicate],
             // [BetweenPredicate, CompiledBetweenPredicate],
-            //
-            // [IsNullPredicate, CompiledIsNullPredicate],
-            // [IsNotNullPredicate, CompiledIsNotNullPredicate]
+
+            [IsNullPredicate, CompiledIsNullPredicate],
+            [IsNotNullPredicate, CompiledIsNotNullPredicate]
 
         ]);
 
@@ -87,6 +87,62 @@ class ExecutionCompiler {
 
     }
 
+    compileBinaryPredicate(schema,
+                           predicate) {
+
+        const columnIndex =
+            schema.getColumnIndex(
+                predicate.getColumnName()
+            );
+
+        if (columnIndex < 0) {
+
+            throw new Error(
+                "Unknown column: " +
+                predicate.getColumnName()
+            );
+
+        }
+
+        const clazz =
+            predicate.compiledClass();
+
+        return new clazz(
+
+            columnIndex,
+
+            predicate.getExpectedValue()
+
+        );
+
+    }
+
+    compileUnaryPredicate(schema,
+                          predicate) {
+
+        const columnIndex =
+            schema.getColumnIndex(
+                predicate.getColumnName()
+            );
+
+        if (columnIndex < 0) {
+
+            throw new Error(
+                "Unknown column: " +
+                predicate.getColumnName()
+            );
+
+        }
+
+        const clazz =
+            predicate.compiledClass();
+
+        return new clazz(
+            columnIndex
+        );
+
+    }
+
     compilePredicates(schema,
                       executionPlan,
                       compiledPlan) {
@@ -116,17 +172,21 @@ class ExecutionCompiler {
     compilePredicate(schema,
                      predicate) {
 
-        for (const [sourceType, compiledType] of this.predicateMap) {
+        if (predicate instanceof BinaryPredicate) {
 
-            if (predicate instanceof sourceType) {
+            return this.compileBinaryPredicate(
+                schema,
+                predicate
+            );
 
-                return this.compileSimplePredicate(
-                    schema,
-                    predicate,
-                    compiledType
-                );
+        }
 
-            }
+        if (predicate instanceof UnaryPredicate) {
+
+            return this.compileUnaryPredicate(
+                schema,
+                predicate
+            );
 
         }
 
