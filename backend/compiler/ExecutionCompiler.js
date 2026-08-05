@@ -2,7 +2,7 @@ class ExecutionCompiler {
 
     constructor() {
 
-        this.predicateMap = new Map([
+        this.binaryPredicates = new Map([
 
             [EqualsPredicate, CompiledEqualsPredicate],
             [NotEqualsPredicate, CompiledNotEqualsPredicate],
@@ -15,13 +15,21 @@ class ExecutionCompiler {
 
             [ContainsPredicate, CompiledContainsPredicate],
             [StartsWithPredicate, CompiledStartsWithPredicate],
-            [EndsWithPredicate, CompiledEndsWithPredicate],
+            [EndsWithPredicate, CompiledEndsWithPredicate]
 
-            // [InPredicate, CompiledInPredicate],
-            // [BetweenPredicate, CompiledBetweenPredicate],
+        ]);
+
+        this.unaryPredicates = new Map([
 
             [IsNullPredicate, CompiledIsNullPredicate],
             [IsNotNullPredicate, CompiledIsNotNullPredicate]
+
+        ]);
+
+        this.multiValuePredicates = new Map([
+
+            [InPredicate, CompiledInPredicate],
+            [BetweenPredicate, CompiledBetweenPredicate]
 
         ]);
 
@@ -31,15 +39,18 @@ class ExecutionCompiler {
             worksheetData,
             executionPlan) {
 
-        const compiledPlan = new CompiledPlan();
+        const compiledPlan =
+            new CompiledPlan();
 
-        compiledPlan.setId(
-            executionPlan.getId()
-        );
+        compiledPlan
+            .setId(
+                executionPlan.getId()
+            );
 
-        compiledPlan.setType(
-            executionPlan.getType()
-        );
+        compiledPlan
+            .setType(
+                executionPlan.getType()
+            );
 
         const schema =
             worksheetData.getSchema();
@@ -87,62 +98,6 @@ class ExecutionCompiler {
 
     }
 
-    compileBinaryPredicate(schema,
-                           predicate) {
-
-        const columnIndex =
-            schema.getColumnIndex(
-                predicate.getColumnName()
-            );
-
-        if (columnIndex < 0) {
-
-            throw new Error(
-                "Unknown column: " +
-                predicate.getColumnName()
-            );
-
-        }
-
-        const clazz =
-            predicate.compiledClass();
-
-        return new clazz(
-
-            columnIndex,
-
-            predicate.getExpectedValue()
-
-        );
-
-    }
-
-    compileUnaryPredicate(schema,
-                          predicate) {
-
-        const columnIndex =
-            schema.getColumnIndex(
-                predicate.getColumnName()
-            );
-
-        if (columnIndex < 0) {
-
-            throw new Error(
-                "Unknown column: " +
-                predicate.getColumnName()
-            );
-
-        }
-
-        const clazz =
-            predicate.compiledClass();
-
-        return new clazz(
-            columnIndex
-        );
-
-    }
-
     compilePredicates(schema,
                       executionPlan,
                       compiledPlan) {
@@ -172,44 +127,106 @@ class ExecutionCompiler {
     compilePredicate(schema,
                      predicate) {
 
-        if (predicate instanceof BinaryPredicate) {
-
-            return this.compileBinaryPredicate(
+        const columnIndex =
+            this.requireColumn(
                 schema,
-                predicate
+                predicate.getColumnName()
+            );
+
+        //
+        // Unary
+        //
+        if (predicate instanceof UnaryPredicate) {
+
+            const compiled =
+                this.unaryPredicates.get(
+                    predicate.constructor
+                );
+
+            if (!compiled) {
+
+                throw new Error(
+                    "Unsupported unary predicate: " +
+                    predicate.constructor.name
+                );
+
+            }
+
+            return new compiled(
+                columnIndex
             );
 
         }
 
-        if (predicate instanceof UnaryPredicate) {
+        //
+        // Binary
+        //
+        if (predicate instanceof BinaryPredicate) {
 
-            return this.compileUnaryPredicate(
-                schema,
-                predicate
+            const compiled =
+                this.binaryPredicates.get(
+                    predicate.constructor
+                );
+
+            if (!compiled) {
+
+                throw new Error(
+                    "Unsupported binary predicate: " +
+                    predicate.constructor.name
+                );
+
+            }
+
+            return new compiled(
+                columnIndex,
+                predicate.getExpectedValue()
             );
+
+        }
+
+        //
+        // Multi value
+        //
+        if (predicate instanceof MultiValuePredicate) {
+
+            const compiled =
+                this.multiValuePredicates.get(
+                    predicate.constructor
+                );
+
+            if (!compiled) {
+
+                throw new Error(
+                    "Unsupported multi value predicate: " +
+                    predicate.constructor.name
+                );
+
+            }
+
+            if (predicate instanceof InPredicate) {
+
+                return new compiled(
+                    columnIndex,
+                    predicate.getValues()
+                );
+
+            }
+
+            if (predicate instanceof BetweenPredicate) {
+
+                return new compiled(
+                    columnIndex,
+                    predicate.getMinimumValue(),
+                    predicate.getMaximumValue()
+                );
+
+            }
 
         }
 
         throw new Error(
             "Unsupported predicate: " +
             predicate.constructor.name
-        );
-
-    }
-
-    compileSimplePredicate(schema,
-                           predicate,
-                           compiledType) {
-
-        return new compiledType(
-
-            this.getColumnIndex(
-                schema,
-                predicate.getColumnName()
-            ),
-
-            predicate.getExpectedValue()
-
         );
 
     }
@@ -234,7 +251,7 @@ class ExecutionCompiler {
 
                 new CompiledOrderBy(
 
-                    this.getColumnIndex(
+                    this.requireColumn(
                         schema,
                         item.getColumnName()
                     ),
@@ -258,37 +275,29 @@ class ExecutionCompiler {
 
         if (!projections ||
             projections.length === 0) {
+
             return;
+
         }
 
         for (const projection of projections) {
 
             compiledPlan.addProjection(
 
-                this.compileProjection(
-                    schema,
-                    projection
+                new CompiledProjection(
+
+                    this.requireColumn(
+                        schema,
+                        projection.getColumnName()
+                    ),
+
+                    projection.getColumnName()
+
                 )
 
             );
 
         }
-
-    }
-
-    compileProjection(schema,
-                      projection) {
-
-        return new CompiledProjection(
-
-            this.getColumnIndex(
-                schema,
-                projection.getColumnName()
-            ),
-
-            projection.getColumnName()
-
-        );
 
     }
 
@@ -301,39 +310,31 @@ class ExecutionCompiler {
 
         if (!values ||
             values.length === 0) {
+
             return;
+
         }
 
         for (const value of values) {
 
             compiledPlan.addValue(
 
-                this.compileValue(
-                    schema,
-                    value
+                new CompiledColumnValue(
+
+                    this.requireColumn(
+                        schema,
+                        value.getColumnName()
+                    ),
+
+                    value.getColumnName(),
+
+                    value.getValue()
+
                 )
 
             );
 
         }
-
-    }
-
-    compileValue(schema,
-                 value) {
-
-        return new CompiledColumnValue(
-
-            this.getColumnIndex(
-                schema,
-                value.getColumnName()
-            ),
-
-            value.getColumnName(),
-
-            value.getValue()
-
-        );
 
     }
 
@@ -350,8 +351,8 @@ class ExecutionCompiler {
 
     }
 
-    getColumnIndex(schema,
-                   columnName) {
+    requireColumn(schema,
+                  columnName) {
 
         const columnIndex =
             schema.getColumnIndex(
@@ -370,4 +371,5 @@ class ExecutionCompiler {
         return columnIndex;
 
     }
+
 }

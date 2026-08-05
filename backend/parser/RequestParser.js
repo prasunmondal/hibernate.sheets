@@ -197,8 +197,8 @@ class RequestParser {
 
                 return Predicates.between(
                     json.column,
-                    json.from,
-                    json.to
+                    json.minimum,
+                    json.maximum
                 );
 
             case "IS_NULL":

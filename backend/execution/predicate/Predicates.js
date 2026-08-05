@@ -90,12 +90,14 @@ class Predicates {
 
     }
 
-    static between(columnName, from, to) {
+    static between(columnName,
+                   minimumValue,
+                   maximumValue) {
 
         return new BetweenPredicate(
             columnName,
-            from,
-            to
+            minimumValue,
+            maximumValue
         );
 
     }
