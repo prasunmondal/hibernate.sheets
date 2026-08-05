@@ -130,12 +130,97 @@ class RequestParser {
                     json.value
                 );
 
-        }
+            case "NOT_EQUALS":
 
-        throw new Error(
-            "Unsupported operator: " +
-            json.operator
-        );
+                return Predicates.notEquals(
+                    json.column,
+                    json.value
+                );
+
+            case "GREATER_THAN":
+
+                return Predicates.greaterThan(
+                    json.column,
+                    json.value
+                );
+
+            case "GREATER_THAN_EQUALS":
+
+                return Predicates.greaterThanEquals(
+                    json.column,
+                    json.value
+                );
+
+            case "LESS_THAN":
+
+                return Predicates.lessThan(
+                    json.column,
+                    json.value
+                );
+
+            case "LESS_THAN_EQUALS":
+
+                return Predicates.lessThanEquals(
+                    json.column,
+                    json.value
+                );
+
+            case "STARTS_WITH":
+
+                return Predicates.startsWith(
+                    json.column,
+                    json.value
+                );
+
+            case "ENDS_WITH":
+
+                return Predicates.endsWith(
+                    json.column,
+                    json.value
+                );
+
+            case "CONTAINS":
+
+                return Predicates.contains(
+                    json.column,
+                    json.value
+                );
+
+            case "IN":
+
+                return Predicates.in(
+                    json.column,
+                    json.values
+                );
+
+            case "BETWEEN":
+
+                return Predicates.between(
+                    json.column,
+                    json.from,
+                    json.to
+                );
+
+            case "IS_NULL":
+
+                return Predicates.isNull(
+                    json.column
+                );
+
+            case "IS_NOT_NULL":
+
+                return Predicates.isNotNull(
+                    json.column
+                );
+
+            default:
+
+                throw new Error(
+                    "Unsupported operator: " +
+                    json.operator
+                );
+
+        }
 
     }
 

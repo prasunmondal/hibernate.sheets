@@ -1,5 +1,32 @@
 class ExecutionCompiler {
 
+    constructor() {
+
+        this.predicateMap = new Map([
+
+            [EqualsPredicate, CompiledEqualsPredicate],
+            [NotEqualsPredicate, CompiledNotEqualsPredicate],
+
+            [GreaterThanPredicate, CompiledGreaterThanPredicate],
+            [GreaterThanEqualsPredicate, CompiledGreaterThanEqualsPredicate],
+
+            [LessThanPredicate, CompiledLessThanPredicate],
+            [LessThanEqualsPredicate, CompiledLessThanEqualsPredicate],
+
+            // [ContainsPredicate, CompiledContainsPredicate],
+            // [StartsWithPredicate, CompiledStartsWithPredicate],
+            // [EndsWithPredicate, CompiledEndsWithPredicate],
+            //
+            // [InPredicate, CompiledInPredicate],
+            // [BetweenPredicate, CompiledBetweenPredicate],
+            //
+            // [IsNullPredicate, CompiledIsNullPredicate],
+            // [IsNotNullPredicate, CompiledIsNotNullPredicate]
+
+        ]);
+
+    }
+
     compile(context,
             worksheetData,
             executionPlan) {
@@ -14,7 +41,8 @@ class ExecutionCompiler {
             executionPlan.getType()
         );
 
-        const schema = worksheetData.getSchema();
+        const schema =
+            worksheetData.getSchema();
 
         this.compilePredicates(
             schema,
@@ -63,19 +91,22 @@ class ExecutionCompiler {
                       executionPlan,
                       compiledPlan) {
 
-        const predicates = executionPlan.getPredicates();
+        const predicates =
+            executionPlan.getPredicates();
 
         if (!predicates) {
             return;
         }
 
-        for (let i = 0; i < predicates.length; i++) {
+        for (const predicate of predicates) {
 
             compiledPlan.addPredicate(
+
                 this.compilePredicate(
                     schema,
-                    predicates[i]
+                    predicate
                 )
+
             );
 
         }
@@ -85,12 +116,17 @@ class ExecutionCompiler {
     compilePredicate(schema,
                      predicate) {
 
-        if (predicate instanceof EqualsPredicate) {
+        for (const [sourceType, compiledType] of this.predicateMap) {
 
-            return this.compileEqualsPredicate(
-                schema,
-                predicate
-            );
+            if (predicate instanceof sourceType) {
+
+                return this.compileSimplePredicate(
+                    schema,
+                    predicate,
+                    compiledType
+                );
+
+            }
 
         }
 
@@ -101,26 +137,19 @@ class ExecutionCompiler {
 
     }
 
-    compileEqualsPredicate(schema,
-                           predicate) {
+    compileSimplePredicate(schema,
+                           predicate,
+                           compiledType) {
 
-        const columnIndex =
-            schema.getColumnIndex(
+        return new compiledType(
+
+            this.getColumnIndex(
+                schema,
                 predicate.getColumnName()
-            );
+            ),
 
-        if (columnIndex < 0) {
-
-            throw new Error(
-                "Unknown column: " +
-                predicate.getColumnName()
-            );
-
-        }
-
-        return new CompiledEqualsPredicate(
-            columnIndex,
             predicate.getExpectedValue()
+
         );
 
     }
@@ -129,35 +158,29 @@ class ExecutionCompiler {
                    executionPlan,
                    compiledPlan) {
 
-        const orderBy = executionPlan.getOrderBy();
+        const orderBy =
+            executionPlan.getOrderBy();
 
-        if (!orderBy || orderBy.length === 0) {
+        if (!orderBy ||
+            orderBy.length === 0) {
+
             return;
+
         }
 
-        for (let i = 0; i < orderBy.length; i++) {
-
-            const item = orderBy[i];
-
-            const columnIndex =
-                schema.getColumnIndex(
-                    item.getColumnName()
-                );
-
-            if (columnIndex < 0) {
-
-                throw new Error(
-                    "Unknown column: " +
-                    item.getColumnName()
-                );
-
-            }
+        for (const item of orderBy) {
 
             compiledPlan.addOrderBy(
 
                 new CompiledOrderBy(
-                    columnIndex,
+
+                    this.getColumnIndex(
+                        schema,
+                        item.getColumnName()
+                    ),
+
                     item.getDirection()
+
                 )
 
             );
@@ -178,13 +201,13 @@ class ExecutionCompiler {
             return;
         }
 
-        for (let i = 0; i < projections.length; i++) {
+        for (const projection of projections) {
 
             compiledPlan.addProjection(
 
                 this.compileProjection(
                     schema,
-                    projections[i]
+                    projection
                 )
 
             );
@@ -196,23 +219,12 @@ class ExecutionCompiler {
     compileProjection(schema,
                       projection) {
 
-        const columnIndex =
-            schema.getColumnIndex(
-                projection.getColumnName()
-            );
-
-        if (columnIndex < 0) {
-
-            throw new Error(
-                "Unknown column: " +
-                projection.getColumnName()
-            );
-
-        }
-
         return new CompiledProjection(
 
-            columnIndex,
+            this.getColumnIndex(
+                schema,
+                projection.getColumnName()
+            ),
 
             projection.getColumnName()
 
@@ -232,13 +244,13 @@ class ExecutionCompiler {
             return;
         }
 
-        for (let i = 0; i < values.length; i++) {
+        for (const value of values) {
 
             compiledPlan.addValue(
 
                 this.compileValue(
                     schema,
-                    values[i]
+                    value
                 )
 
             );
@@ -250,23 +262,12 @@ class ExecutionCompiler {
     compileValue(schema,
                  value) {
 
-        const columnIndex =
-            schema.getColumnIndex(
-                value.getColumnName()
-            );
-
-        if (columnIndex < 0) {
-
-            throw new Error(
-                "Unknown column: " +
-                value.getColumnName()
-            );
-
-        }
-
         return new CompiledColumnValue(
 
-            columnIndex,
+            this.getColumnIndex(
+                schema,
+                value.getColumnName()
+            ),
 
             value.getColumnName(),
 
@@ -289,4 +290,24 @@ class ExecutionCompiler {
 
     }
 
+    getColumnIndex(schema,
+                   columnName) {
+
+        const columnIndex =
+            schema.getColumnIndex(
+                columnName
+            );
+
+        if (columnIndex < 0) {
+
+            throw new Error(
+                "Unknown column: " +
+                columnName
+            );
+
+        }
+
+        return columnIndex;
+
+    }
 }

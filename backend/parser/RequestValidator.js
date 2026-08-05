@@ -179,11 +179,32 @@ class RequestValidator {
             );
         }
 
-        if (predicate instanceof EqualsPredicate) {
-            return this.validateEqualsPredicate(
-                predicate,
-                index
+        if (
+            predicate instanceof EqualsPredicate ||
+            predicate instanceof NotEqualsPredicate ||
+            predicate instanceof GreaterThanPredicate ||
+            predicate instanceof GreaterThanEqualsPredicate ||
+            predicate instanceof LessThanPredicate ||
+            predicate instanceof LessThanEqualsPredicate
+        ) {
+
+            this.require(
+                predicate.getColumnName(),
+                "Predicate " + index +
+                " must specify a column."
             );
+
+            if (predicate.getExpectedValue() === undefined) {
+
+                throw new Error(
+                    "Predicate " + index +
+                    " must specify a value."
+                );
+
+            }
+
+            return;
+
         }
 
         throw new Error(
