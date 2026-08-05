@@ -31,8 +31,8 @@ class ExecutionService {
         const worksheetData =
             context.provider.getWorksheetData(
                 context,
-                operation.spreadsheet,
-                operation.worksheet
+                operation.getSpreadsheetId(),
+                operation.getWorksheet()
             );
 
         const plan =

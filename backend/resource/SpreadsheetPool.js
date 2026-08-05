@@ -1,29 +1,30 @@
 class SpreadsheetPool {
 
-    constructor(registry){
-
-        this.registry = registry;
-
+    constructor() {
         this.cache = {};
-
     }
 
-    get(alias){
+    get(spreadsheetId) {
 
-        if(this.cache[alias])
+        if (!spreadsheetId) {
+            throw new Error(
+                "Spreadsheet ID is missing: " +
+                JSON.stringify(spreadsheetId)
+            );
+        }
 
-            return this.cache[alias];
-
-        const id =
-            this.registry.getSpreadsheetId(alias);
+        if (this.cache[spreadsheetId]) {
+            return this.cache[spreadsheetId];
+        }
 
         const spreadsheet =
-            SpreadsheetApp.openById(id);
+            SpreadsheetApp.openById(
+                spreadsheetId
+            );
 
-        this.cache[alias] = spreadsheet;
+        this.cache[spreadsheetId] = spreadsheet;
 
         return spreadsheet;
-
     }
 
 }

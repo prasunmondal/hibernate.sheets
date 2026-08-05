@@ -6,15 +6,16 @@ class WorksheetDataPool {
 
     }
 
-    get(spreadsheet, worksheet) {
+    get(spreadsheetId, worksheet) {
 
-        const key = spreadsheet + ":" + worksheet;
+        const key =
+            spreadsheetId + ":" + worksheet;
 
         if (!this.cache[key]) {
 
             this.cache[key] =
                 new WorksheetDataReference(
-                    spreadsheet,
+                    spreadsheetId,
                     worksheet
                 );
 

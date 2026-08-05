@@ -4,7 +4,7 @@ class WorksheetCommitter {
 
         const worksheet =
             resources.worksheets.get(
-                worksheetData.spreadsheet,
+                worksheetData.spreadsheetId,
                 worksheetData.worksheet
             );
 

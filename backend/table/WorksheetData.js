@@ -1,8 +1,8 @@
 class WorksheetData {
 
-    constructor(spreadsheet, worksheet) {
+    constructor(spreadsheetId, worksheet) {
 
-        this.spreadsheet = spreadsheet;
+        this.spreadsheetId = spreadsheetId;
 
         this.worksheet = worksheet;
 

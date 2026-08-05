@@ -8,17 +8,17 @@ class WorksheetPool {
 
     }
 
-    get(spreadsheetAlias, worksheet){
+    get(spreadsheetId, worksheet){
 
         const key =
-            spreadsheetAlias + ":" + worksheet;
+            spreadsheetId + ":" + worksheet;
 
         if(this.cache[key])
 
             return this.cache[key];
 
         const ss =
-            this.pool.get(spreadsheetAlias);
+            this.pool.get(spreadsheetId);
 
         const ws = ss.getSheetByName(worksheet);
 

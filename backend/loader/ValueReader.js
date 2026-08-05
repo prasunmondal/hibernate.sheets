@@ -8,7 +8,7 @@ class ValueReader {
 
         const worksheet =
             this.resources.worksheets.get(
-                reference.spreadsheet,
+                reference.spreadsheetId,
                 reference.worksheet
             );
 

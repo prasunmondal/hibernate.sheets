@@ -16,28 +16,20 @@ class SheetEngine {
     constructor() {
 
         this.config = new EngineConfig();
-
-        this.registry = new Registry();
-
     }
 
     handlePost(e) {
+
+        var context = null
 
         try {
 
             const json = JSON.parse(e.postData.contents);
 
-            const request =
-                RequestParser.parse(json);
-
-            const context =
-                new ExecutionContext(
-                    request,
-                    this.registry
-                );
+            const request = RequestParser.parse(json);
+            context = new ExecutionContext(request);
 
             RequestValidator.validate(request);
-
 
             context.provider =
                 new GoogleSheetsProvider(
@@ -63,6 +55,7 @@ class SheetEngine {
                     success: false,
                     error: ex.message,
                     exceptionType: ex.name,
+                    debug: context.getDebug().getEntries(),
                     stackTrace: ex.stack ? ex.stack.split("\n") : []
                 }))
                 .setMimeType(ContentService.MimeType.JSON);

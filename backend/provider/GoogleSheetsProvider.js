@@ -13,12 +13,12 @@ class GoogleSheetsProvider {
     }
 
     getWorksheetData(context,
-                     spreadsheet,
+                     spreadsheetId,
                      worksheet) {
 
         const reference =
             this.resources.data.get(
-                spreadsheet,
+                spreadsheetId,
                 worksheet
             );
 

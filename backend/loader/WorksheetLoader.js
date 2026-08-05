@@ -29,7 +29,7 @@ class WorksheetLoader {
         const total = Stopwatch.measure(() => {
 
             const worksheetData = new WorksheetData(
-                reference.spreadsheet,
+                reference.spreadsheetId,
                 reference.worksheet
             );
 

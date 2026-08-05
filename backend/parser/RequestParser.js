@@ -37,8 +37,8 @@ class RequestParser {
 
         operation.type = json.type ?? OperationType.SELECT;
 
-        operation.spreadsheet =
-            json.spreadsheet;
+        operation.spreadsheetId =
+            json.spreadsheetId;
 
         operation.worksheet =
             json.worksheet;

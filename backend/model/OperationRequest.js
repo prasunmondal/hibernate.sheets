@@ -6,7 +6,7 @@ class OperationRequest {
 
         this.type = OperationType.SELECT;
 
-        this.spreadsheet = "";
+        this.spreadsheetId = "";
 
         this.worksheet = "";
 
@@ -94,10 +94,8 @@ class OperationRequest {
 
     }
 
-    getSpreadsheet() {
-
-        return this.spreadsheet;
-
+    getSpreadsheetId() {
+        return this.spreadsheetId;
     }
 
     getWorksheet() {

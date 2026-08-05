@@ -8,17 +8,17 @@ class HeaderPool {
 
     }
 
-    get(spreadsheet, worksheet){
+    get(spreadsheetId, worksheet){
 
         const key =
-            spreadsheet+":"+worksheet;
+            spreadsheetId+":"+worksheet;
 
         if(this.cache[key])
 
             return this.cache[key];
 
         const ws =
-            this.pool.get(spreadsheet,worksheet);
+            this.pool.get(spreadsheetId,worksheet);
 
         const headers =
             ws.getRange(

@@ -6,7 +6,7 @@ class Provider {
 
     }
 
-    getWorksheet(spreadsheet, worksheet) {
+    getWorksheet(spreadsheetId, worksheet) {
 
         throw new Error("Not Implemented");
 

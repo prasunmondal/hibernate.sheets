@@ -92,7 +92,7 @@ class RequestValidator {
     static validateSelect(operation, index) {
 
         this.require(
-            operation.spreadsheet,
+            operation.getSpreadsheetId(),
             "Operation " + index +
             " must specify a spreadsheet."
         );
