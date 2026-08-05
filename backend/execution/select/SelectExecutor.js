@@ -5,12 +5,6 @@ class SelectExecutor {
         this.executor =
             new ExecutionExecutor();
 
-        this.sorter =
-            new ExecutionSorter();
-
-        this.paginator =
-            new ExecutionPaginator();
-
     }
 
     execute(context,
@@ -23,24 +17,11 @@ class SelectExecutor {
         const execute =
             Stopwatch.measure(() => {
 
-                const result =
-                    this.executor.execute(
-                        context,
-                        worksheetData,
-                        compiledPlan
-                    );
-
-                this.sorter.sort(
-                    result,
+                return this.executor.execute(
+                    context,
+                    worksheetData,
                     compiledPlan
                 );
-
-                this.paginator.paginate(
-                    result,
-                    compiledPlan
-                );
-
-                return result;
 
             });
 

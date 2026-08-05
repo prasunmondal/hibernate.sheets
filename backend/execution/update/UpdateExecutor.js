@@ -14,28 +14,16 @@ class UpdateExecutor {
         const result =
             new ExecutionResult();
 
-        const predicates =
-            compiledPlan.getPredicates();
-
-        const values =
-            compiledPlan.getValues();
-
-        const rows =
-            worksheetData.getRows();
-
-        for (const row of rows) {
-
-            if (!this.executor.matches(
+        const matchingRows =
+            this.executor.execute(
                 context,
-                row,
-                predicates
-            )) {
+                worksheetData,
+                compiledPlan
+            );
 
-                continue;
+        for (const row of matchingRows.getRows()) {
 
-            }
-
-            for (const value of values) {
+            for (const value of compiledPlan.getValues()) {
 
                 row.set(
                     value.columnIndex,
@@ -50,7 +38,6 @@ class UpdateExecutor {
                 .push(row);
 
             result.addRow(row);
-
         }
 
         return result;

@@ -17,45 +17,16 @@ class DeleteExecutor {
         const predicates =
             compiledPlan.getPredicates();
 
-        const rows =
-            worksheetData.getRows();
+        for (const row of matchingRows.getRows()) {
 
-        for (let i = 0; i < rows.length; i++) {
-
-            const row =
-                rows[i];
-
-            //
-            // Apply WHERE
-            //
-            if (!this.executor.matches(
-                context,
-                row,
-                predicates
-            )) {
-
-                continue;
-
-            }
-
-            //
-            // Mark as deleted
-            //
             row.markDeleted();
 
-            //
-            // Track change
-            //
             worksheetData
                 .getChangeSet()
                 .deleted
                 .push(row);
 
-            //
-            // Return deleted row
-            //
             result.addRow(row);
-
         }
 
         result.deleted =

@@ -1,31 +1,40 @@
 class ExecutionExecutor {
 
+    constructor() {
+
+        this.sorter =
+            new ExecutionSorter();
+
+        this.paginator =
+            new ExecutionPaginator();
+
+    }
+
     execute(context,
             worksheetData,
             compiledPlan) {
 
-        const result = new ExecutionResult();
+        const result =
+            new ExecutionResult();
 
-        const executionStats = context.statistics.execution;
+        const executionStats =
+            context.statistics.execution;
 
-        const rows = worksheetData.getRows();
-        const predicates = compiledPlan.getPredicates();
+        const rows =
+            worksheetData.getRows();
 
-        if (!rows) {
-            throw new Error("worksheetData.getRows() returned undefined");
-        }
+        const predicates =
+            compiledPlan.getPredicates();
 
-        if (!predicates) {
-            throw new Error("compiledPlan.getPredicates() returned undefined");
-        }
-
-        for (let i = 0; i < rows.length; i++) {
-
-            const row = rows[i];
+        for (const row of rows) {
 
             executionStats.rowsExamined++;
 
-            if (!this.matches(context, row, predicates)) {
+            if (!this.matches(
+                context,
+                row,
+                predicates
+            )) {
                 continue;
             }
 
@@ -35,29 +44,35 @@ class ExecutionExecutor {
 
         }
 
+        //
+        // ORDER BY
+        //
+        this.sorter.sort(
+            result,
+            compiledPlan
+        );
+
+        //
+        // OFFSET / LIMIT
+        //
+        this.paginator.paginate(
+            result,
+            compiledPlan
+        );
+
         return result;
+
     }
 
-    matches(context, row, predicates) {
+    matches(context,
+            row,
+            predicates) {
 
-        if (predicates == null) {
-            throw new Error("CompiledPlan returned null/undefined predicates.");
+        if (!predicates) {
+            return true;
         }
 
-        for (let i = 0; i < predicates.length; i++) {
-
-            const predicate = predicates[i];
-
-            context.getDebug().add(
-                "Predicate Evaluation",
-                {
-                    predicate: predicate.constructor.name,
-                    columnIndex: predicate.columnIndex,
-                    expectedValue: predicate.expectedValue,
-                    actualValue: row.values[predicate.columnIndex],
-                    matched: predicate.matches(row)
-                }
-            );
+        for (const predicate of predicates) {
 
             if (!predicate.matches(row)) {
                 return false;
@@ -66,5 +81,7 @@ class ExecutionExecutor {
         }
 
         return true;
+
     }
+
 }
