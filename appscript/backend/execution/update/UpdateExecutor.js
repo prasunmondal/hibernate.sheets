@@ -26,8 +26,17 @@ class UpdateExecutor {
             for (const value of compiledPlan.getValues()) {
 
                 row.set(
+
                     value.columnIndex,
-                    value.value
+
+                    value.apply(
+
+                        row.get(
+                            value.columnIndex
+                        )
+
+                    )
+
                 );
 
             }

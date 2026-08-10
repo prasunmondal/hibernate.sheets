@@ -102,17 +102,47 @@ class RequestParser {
 
         }
 
-        for (const column in json.values) {
+        if (json.values) {
 
-            operation.addValue(
+            for (const column in json.values) {
 
-                new ColumnValue(
-                    column,
-                    json.values[column]
-                )
+                const item =
+                    json.values[column];
 
-            );
+                //
+                // Primitive value -> SET
+                //
+                if (
+                    item === null ||
+                    typeof item !== "object" ||
+                    Array.isArray(item)
+                ) {
 
+                    operation.addValue(
+                        new ColumnValue(
+                            column,
+                            item,
+                            ValueOperation.SET
+                        )
+                    );
+
+                    continue;
+
+                }
+
+                //
+                // Object value
+                //
+                operation.addValue(
+                    new ColumnValue(
+                        column,
+                        item.value,
+                        item.operation ||
+                        ValueOperation.SET
+                    )
+                );
+
+            }
         }
 
         return operation;

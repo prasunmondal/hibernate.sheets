@@ -13,6 +13,13 @@
   ],
   "filePushOrder": [
 
+    "backend/write/ValueOperation.js",
+
+    "backend/compiler/CompiledValueOperation.js",
+    "backend/compiler/CompiledSetValue.js",
+    "backend/compiler/CompiledAppendValue.js",
+    "backend/compiler/CompiledPrependValue.js",
+
     "backend/execution/predicate/Predicate.js",
     "backend/execution/predicate/UnaryPredicate.js",
     "backend/execution/predicate/BinaryPredicate.js",

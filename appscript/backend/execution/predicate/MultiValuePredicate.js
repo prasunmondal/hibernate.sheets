@@ -1,4 +1,4 @@
-class MultiValuePredicate  extends BinaryPredicate {
+class MultiValuePredicate  extends Predicate {
 
     constructor(columnName, values) {
 

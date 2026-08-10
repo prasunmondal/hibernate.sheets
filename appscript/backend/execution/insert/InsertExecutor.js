@@ -26,7 +26,10 @@ class InsertExecutor {
         for (const value of compiledValues) {
 
             values[value.columnIndex] =
-                value.value;
+
+                value.apply(
+                    ""
+                );
 
         }
 

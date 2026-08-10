@@ -55,7 +55,10 @@ class CloneExecutor {
             for (const value of valuesToApply) {
 
                 values[value.columnIndex] =
-                    value.value;
+
+                    value.apply(
+                        values[value.columnIndex]
+                    );
 
             }
 

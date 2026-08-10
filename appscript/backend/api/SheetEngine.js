@@ -20,7 +20,7 @@ class SheetEngine {
 
     handlePost(e) {
 
-        var context = null
+        let context = null;
 
         try {
 
@@ -55,7 +55,10 @@ class SheetEngine {
                     success: false,
                     error: ex.message,
                     exceptionType: ex.name,
-                    debug: context.getDebug().getEntries(),
+                        debug:
+                            context
+                                ? context.getDebug().getEntries()
+                                : [],
                     stackTrace: ex.stack ? ex.stack.split("\n") : []
                 }))
                 .setMimeType(ContentService.MimeType.JSON);

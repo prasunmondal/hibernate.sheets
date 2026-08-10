@@ -14,8 +14,12 @@ class DeleteExecutor {
         const result =
             new ExecutionResult();
 
-        const predicates =
-            compiledPlan.getPredicates();
+        const matchingRows =
+            this.executor.execute(
+                context,
+                worksheetData,
+                compiledPlan
+            );
 
         for (const row of matchingRows.getRows()) {
 

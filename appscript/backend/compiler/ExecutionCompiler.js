@@ -33,6 +33,14 @@ class ExecutionCompiler {
 
         ]);
 
+        this.valueOperations = new Map([
+
+            [ValueOperation.SET, CompiledSetValue],
+            [ValueOperation.APPEND, CompiledAppendValue],
+            [ValueOperation.PREPEND, CompiledPrependValue]
+
+        ]);
+
     }
 
     compile(context,
@@ -78,6 +86,8 @@ class ExecutionCompiler {
             executionPlan,
             compiledPlan
         );
+
+
 
         this.copyPaging(
             executionPlan,
@@ -319,22 +329,46 @@ class ExecutionCompiler {
 
             compiledPlan.addValue(
 
-                new CompiledColumnValue(
-
-                    this.requireColumn(
-                        schema,
-                        value.getColumnName()
-                    ),
-
-                    value.getColumnName(),
-
-                    value.getValue()
-
+                this.compileValue(
+                    schema,
+                    value
                 )
 
             );
 
         }
+
+    }
+
+    compileValue(schema,
+                 value) {
+
+        const compiledType =
+            this.valueOperations.get(
+                value.getOperation()
+            );
+
+        if (!compiledType) {
+
+            throw new Error(
+                "Unsupported value operation: " +
+                value.getOperation()
+            );
+
+        }
+
+        return new compiledType(
+
+            this.requireColumn(
+                schema,
+                value.getColumnName()
+            ),
+
+            value.getColumnName(),
+
+            value.getValue()
+
+        );
 
     }
 
