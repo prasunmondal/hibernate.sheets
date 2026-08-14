@@ -13,6 +13,19 @@ class CompiledPlan {
         this.projections = [];
         this.values = [];
         this.type = OperationType.SELECT;
+        this.rows = [];
+    }
+
+    addRow(row) {
+
+        this.rows.push(row);
+
+        return this;
+    }
+
+    getRows() {
+
+        return this.rows;
     }
 
     setType(type) {

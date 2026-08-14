@@ -102,50 +102,114 @@ class RequestParser {
 
         }
 
-        if (json.values) {
+        if (json.values !== undefined) {
 
-            for (const column in json.values) {
+            this.parseValues(
+                json.values,
+                operation
+            );
 
-                const item =
-                    json.values[column];
+        }
 
-                //
-                // Primitive value -> SET
-                //
-                if (
-                    item === null ||
-                    typeof item !== "object" ||
-                    Array.isArray(item)
-                ) {
+        if (json.rows !== undefined) {
 
-                    operation.addValue(
-                        new ColumnValue(
-                            column,
-                            item,
-                            ValueOperation.SET
-                        )
-                    );
+            if (!Array.isArray(json.rows)) {
 
-                    continue;
-
-                }
-
-                //
-                // Object value
-                //
-                operation.addValue(
-                    new ColumnValue(
-                        column,
-                        item.value,
-                        item.operation ||
-                        ValueOperation.SET
-                    )
+                throw new Error(
+                    "'rows' must be an array."
                 );
 
             }
+
+            this.parseRows(
+                json.rows,
+                operation
+            );
+
         }
 
         return operation;
+
+    }
+
+    static parseValues(values,
+                       target) {
+
+        for (const column in values) {
+
+            const item =
+                values[column];
+
+            //
+            // Primitive -> SET
+            //
+            if (
+                item === null ||
+                typeof item !== "object" ||
+                Array.isArray(item)
+            ) {
+
+                target.addValue(
+
+                    new ColumnValue(
+                        column,
+                        item,
+                        ValueOperation.SET
+                    )
+
+                );
+
+                continue;
+            }
+
+            //
+            // Value operation
+            //
+            target.addValue(
+
+                new ColumnValue(
+                    column,
+                    item.value,
+                    item.operation ||
+                    ValueOperation.SET
+                )
+
+            );
+
+        }
+
+    }
+
+    static parseRows(rows,
+                     operation) {
+
+        for (const row of rows) {
+
+            if (
+                !row ||
+                typeof row !== "object" ||
+                Array.isArray(row)
+            ) {
+
+                throw new Error(
+                    "Each INSERT row must be an object."
+                );
+
+            }
+
+            const insertRow =
+                new InsertRow();
+
+            this.parseValues(
+                row,
+                insertRow
+            );
+
+            operation.addRow(
+                insertRow
+            );
+
+        }
 
     }
 

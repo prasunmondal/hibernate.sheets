@@ -10,10 +10,23 @@ class ExecutionPlan {
         this.orderBy = [];
         this.projections = [];
         this.values = [];
+        this.rows = [];
 
         this.useIndexes = true;
         this.type = OperationType.SELECT;
 
+    }
+
+    addRow(row) {
+
+        this.rows.push(row);
+
+        return this;
+    }
+
+    getRows() {
+
+        return this.rows;
     }
 
     addPredicate(predicate) {

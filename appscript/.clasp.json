@@ -17,6 +17,7 @@
 
     "backend/compiler/CompiledValueOperation.js",
     "backend/compiler/CompiledSetValue.js",
+    "backend/compiler/CompiledInsertRow.js",
     "backend/compiler/CompiledAppendValue.js",
     "backend/compiler/CompiledPrependValue.js",
 

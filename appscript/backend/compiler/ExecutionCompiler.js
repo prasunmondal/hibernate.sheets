@@ -87,7 +87,11 @@ class ExecutionCompiler {
             compiledPlan
         );
 
-
+        this.compileRows(
+            schema,
+            executionPlan,
+            compiledPlan
+        );
 
         this.copyPaging(
             executionPlan,
@@ -369,6 +373,46 @@ class ExecutionCompiler {
             value.getValue()
 
         );
+
+    }
+
+    compileRows(schema,
+                executionPlan,
+                compiledPlan) {
+
+        const rows =
+            executionPlan.getRows();
+
+        if (!rows ||
+            rows.length === 0) {
+
+            return;
+
+        }
+
+        for (const row of rows) {
+
+            const compiledRow =
+                new CompiledInsertRow();
+
+            for (const value of row.getValues()) {
+
+                compiledRow.addValue(
+
+                    this.compileValue(
+                        schema,
+                        value
+                    )
+
+                );
+
+            }
+
+            compiledPlan.addRow(
+                compiledRow
+            );
+
+        }
 
     }
 

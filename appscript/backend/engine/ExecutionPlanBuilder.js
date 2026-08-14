@@ -29,7 +29,15 @@ class ExecutionPlanBuilder {
         }
 
         for (const value of operation.getValues()) {
+
             plan.addValue(value);
+
+        }
+
+        for (const row of operation.getRows()) {
+
+            plan.addRow(row);
+
         }
 
         // console.log("Execution Plan: " + JSON.stringify(plan));
