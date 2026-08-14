@@ -17,7 +17,10 @@ class ExecutionService {
         this.worksheetColumnExecutor =
             new WorksheetColumnExecutor();
 
+        this.clearWorksheetExecutor =
+            new ClearWorksheetExecutor();
     }
+
 
     execute(context) {
 
@@ -63,6 +66,13 @@ class ExecutionService {
                     operation
                 );
 
+            case OperationType.CLEAR_WORKSHEET:
+
+                return this.executeClearWorksheet(
+                    context,
+                    operation
+                );
+
             default:
 
                 return this.executeRowOperation(
@@ -71,6 +81,32 @@ class ExecutionService {
                 );
 
         }
+
+    }
+
+    executeClearWorksheet(context,
+                          operation) {
+
+        const result =
+            this.clearWorksheetExecutor.execute(
+                operation
+            );
+
+        context.response.addResult({
+
+            operationId:
+                operation.getId(),
+
+            worksheet:
+                operation.getWorksheet(),
+
+            rowsCleared:
+            result.rowsCleared,
+
+            columnsCleared:
+            result.columnsCleared
+
+        });
 
     }
 

@@ -91,6 +91,15 @@ class RequestValidator {
                 this.validateAddColumns(operation, index);
                 break;
 
+            case OperationType.CLEAR_WORKSHEET:
+
+                this.validateClearWorksheet(
+                    operation,
+                    index
+                );
+
+                break;
+
             default:
                 throw new Error(
                     "Unsupported operation type: " +
@@ -98,6 +107,25 @@ class RequestValidator {
                 );
 
         }
+
+    }
+
+    static validateClearWorksheet(operation,
+                                  index) {
+
+        this.require(
+            operation.getSpreadsheetId(),
+
+            "Operation " + index +
+            " must specify a spreadsheet."
+        );
+
+        this.require(
+            operation.getWorksheet(),
+
+            "Operation " + index +
+            " must specify a worksheet."
+        );
 
     }
 
