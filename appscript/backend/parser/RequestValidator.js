@@ -83,11 +83,77 @@ class RequestValidator {
                 this.validateCreateWorksheet(operation, index);
                 break;
 
+            case OperationType.GET_COLUMNS:
+                this.validateGetColumns(operation, index);
+                break;
+
+            case OperationType.ADD_COLUMNS:
+                this.validateAddColumns(operation, index);
+                break;
+
             default:
                 throw new Error(
                     "Unsupported operation type: " +
                     operation.type
                 );
+
+        }
+
+    }
+
+    static validateGetColumns(operation,
+                              index) {
+
+        this.require(
+            operation.getSpreadsheetId(),
+            "Operation " + index +
+            " must specify a spreadsheet."
+        );
+
+        this.require(
+            operation.getWorksheet(),
+            "Operation " + index +
+            " must specify a worksheet."
+        );
+
+    }
+
+    static validateAddColumns(operation,
+                              index) {
+
+        this.require(
+            operation.getSpreadsheetId(),
+            "Operation " + index +
+            " must specify a spreadsheet."
+        );
+
+        this.require(
+            operation.getWorksheet(),
+            "Operation " + index +
+            " must specify a worksheet."
+        );
+
+        const columns =
+            operation.getColumns();
+
+        if (!columns ||
+            columns.length === 0) {
+
+            throw new Error(
+                "Operation " + index +
+                " must specify at least one column."
+            );
+
+        }
+
+        for (let i = 0; i < columns.length; i++) {
+
+            this.require(
+                columns[i],
+                "Operation " + index +
+                " contains an invalid column at index " +
+                i
+            );
 
         }
 

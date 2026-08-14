@@ -14,6 +14,9 @@ class ExecutionService {
         this.createWorksheetExecutor =
             new CreateWorksheetExecutor();
 
+        this.worksheetColumnExecutor =
+            new WorksheetColumnExecutor();
+
     }
 
     execute(context) {
@@ -46,6 +49,20 @@ class ExecutionService {
                     operation
                 );
 
+            case OperationType.GET_COLUMNS:
+
+                return this.executeGetColumns(
+                    context,
+                    operation
+                );
+
+            case OperationType.ADD_COLUMNS:
+
+                return this.executeAddColumns(
+                    context,
+                    operation
+                );
+
             default:
 
                 return this.executeRowOperation(
@@ -54,6 +71,64 @@ class ExecutionService {
                 );
 
         }
+
+    }
+
+    executeGetColumns(context,
+                      operation) {
+
+        const columns =
+            this.worksheetColumnExecutor
+                .getColumns(
+                    operation
+                );
+
+        context.response.addResult({
+
+            operationId:
+                operation.getId(),
+
+            worksheet:
+                operation.getWorksheet(),
+
+            columns:
+            columns
+
+        });
+
+    }
+
+
+    executeAddColumns(context,
+                      operation) {
+
+        const result =
+            this.worksheetColumnExecutor
+                .addColumns(
+                    operation
+                );
+
+        context.response.addResult({
+
+            operationId:
+                operation.getId(),
+
+            worksheet:
+                operation.getWorksheet(),
+
+            columns:
+            result.columns,
+
+            skippedColumns:
+            result.skippedColumns,
+
+            startColumn:
+            result.startColumn,
+
+            count:
+            result.count
+
+        });
 
     }
 

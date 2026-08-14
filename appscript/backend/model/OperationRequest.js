@@ -15,8 +15,41 @@ class OperationRequest {
 
         this.projections = [];
         this.values = [];
+        this.columns = [];
 
         this.rows = [];
+        this.skipExisting = false;
+    }
+
+    setSkipExisting(skipExisting) {
+
+        this.skipExisting =
+            skipExisting === true;
+
+        return this;
+
+    }
+
+    isSkipExisting() {
+
+        return this.skipExisting;
+
+    }
+
+    addColumn(column) {
+
+        this.columns.push(
+            column
+        );
+
+        return this;
+
+    }
+
+    getColumns() {
+
+        return this.columns;
+
     }
 
     addValue(value) {

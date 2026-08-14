@@ -43,6 +43,10 @@ class RequestParser {
         operation.worksheet =
             json.worksheet;
 
+        operation.setSkipExisting(
+            json.skipExisting === true
+        );
+
         operation.limit =
             json.limit ?? -1;
 
@@ -96,6 +100,26 @@ class RequestParser {
 
                 operation.addProjection(
                     new Projection(column)
+                );
+
+            }
+
+        }
+
+        if (Array.isArray(json.columns)) {
+
+            for (const column of json.columns) {
+
+                if (typeof column !== "string") {
+
+                    throw new Error(
+                        "columns must contain only column names."
+                    );
+
+                }
+
+                operation.addColumn(
+                    column
                 );
 
             }
