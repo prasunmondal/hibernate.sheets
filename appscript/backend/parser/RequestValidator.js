@@ -79,6 +79,10 @@ class RequestValidator {
                 this.validateClone(operation, index);
                 break;
 
+            case OperationType.CREATE_WORKSHEET:
+                this.validateCreateWorksheet(operation, index);
+                break;
+
             default:
                 throw new Error(
                     "Unsupported operation type: " +
@@ -168,6 +172,35 @@ class RequestValidator {
         // throw new Error(
         //     "CLONE is not implemented."
         // );
+
+    }
+
+    static validateCreateWorksheet(operation,
+                                   index) {
+
+        this.require(
+            operation.getSpreadsheetId(),
+            "Operation " + index +
+            " must specify a spreadsheet."
+        );
+
+        const worksheet =
+            operation.getWorksheet();
+
+        this.require(
+            worksheet,
+            "Operation " + index +
+            " must specify a worksheet."
+        );
+
+        if (worksheet.trim().length === 0) {
+
+            throw new Error(
+                "Operation " + index +
+                " must specify a valid worksheet."
+            );
+
+        }
 
     }
 

@@ -10,23 +10,78 @@ class ExecutionService {
 
         this.resultMapper =
             new ResultMapper();
+
+        this.createWorksheetExecutor =
+            new CreateWorksheetExecutor();
+
     }
 
     execute(context) {
 
-        for (const operation of context.request.getOperations()) {
+        for (
+            const operation
+            of context.request.getOperations()
+            ) {
 
             this.executeOperation(
                 context,
                 operation
             );
 
-            context.provider.commitAll();
+        }
+
+        context.provider.commitAll();
+
+    }
+
+    executeOperation(context,
+                     operation) {
+
+        switch (operation.getType()) {
+
+            case OperationType.CREATE_WORKSHEET:
+
+                return this.executeCreateWorksheet(
+                    context,
+                    operation
+                );
+
+            default:
+
+                return this.executeRowOperation(
+                    context,
+                    operation
+                );
+
         }
 
     }
 
-    executeOperation(context, operation) {
+    executeCreateWorksheet(context,
+                           operation) {
+
+        const result =
+            this.createWorksheetExecutor.execute(
+                operation
+            );
+
+        context.response.addResult({
+
+            operationId:
+                operation.getId(),
+
+            worksheet:
+            result.worksheet,
+
+            sheetId:
+            result.sheetId
+
+        });
+
+    }
+
+    executeRowOperation(context,
+                        operation) {
 
         const worksheetData =
             context.provider.getWorksheetData(
@@ -37,7 +92,8 @@ class ExecutionService {
 
         const plan =
             this.planBuilder.build(
-                context, operation
+                context,
+                operation
             );
 
         const execution =
@@ -53,9 +109,6 @@ class ExecutionService {
                 execution.result,
                 worksheetData
             );
-
-        //////////////// Debug
-        context.response.debug = context.getDebug().getEntries();
 
         context.response.addResult(
             apiResult
@@ -80,6 +133,7 @@ class ExecutionService {
             "Predicates",
             plan.getPredicates().length
         );
+
     }
 
 }

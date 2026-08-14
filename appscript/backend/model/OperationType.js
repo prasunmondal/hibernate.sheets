@@ -6,3 +6,4 @@ OperationType.UPDATE = "UPDATE";
 OperationType.DELETE = "DELETE";
 OperationType.UPSERT = "UPSERT";
 OperationType.CLONE = "CLONE";
+OperationType.CREATE_WORKSHEET = "CREATE_WORKSHEET";
